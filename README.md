@@ -2,6 +2,9 @@
 
 A full-featured scientific calculator emulating both the physical **Casio fx-991ES PLUS (Natural-V.P.A.M.)** and the **CalcES / Scientific Calculator Plus 991 (by SAMATICA)** app. 
 
+### 🌐 Live Web App (Use Anywhere, Even With Computer Off)
+👉 **[https://fayzalad.github.io/casio-calces-calculator/](https://fayzalad.github.io/casio-calces-calculator/)**
+
 Architected as a high-performance **Progressive Web App (PWA)** that runs on desktop computers (Windows / macOS / Linux) and on mobile devices (iPhone / iPad / Android).
 
 ---
