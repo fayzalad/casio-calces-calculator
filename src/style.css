@@ -11,19 +11,19 @@
    CALCES DARK (OLED) THEME (Default)
    --------------------------------------------------------- */
 [data-theme="calces-dark"] {
-  --bg-app: #0e1011;
-  --bg-chassis: #16181a;
-  --border-chassis: #252a2e;
+  --bg-app: #0c0e0f;
+  --bg-chassis: #0c0e0f;
+  --border-chassis: #1e2226;
 
-  --bg-lcd: #0a0b0c;
-  --border-lcd: #222629;
+  --bg-lcd: #070809;
+  --border-lcd: #1e2225;
   --color-lcd-text: #ffffff;
   --color-lcd-flag-active: #4caf50;
-  --color-lcd-flag-inactive: #2d3338;
+  --color-lcd-flag-inactive: #252a2f;
   --color-lcd-cursor: #00e676;
 
-  --bg-key-default: #252a2e;
-  --border-key: #32383e;
+  --bg-key-default: #22262a;
+  --border-key: #2f353b;
   --color-key-text: #ffffff;
 
   --bg-key-shift: #f5b300;
@@ -47,9 +47,9 @@
    CLASSIC CASIO fx-991ES PLUS THEME
    --------------------------------------------------------- */
 [data-theme="casio-classic"] {
-  --bg-app: #282c34;
-  --bg-chassis: #e3e6ea;
-  --border-chassis: #b4bac3;
+  --bg-app: #dfe3e8;
+  --bg-chassis: #dfe3e8;
+  --border-chassis: #b8bec7;
 
   --bg-lcd: #9fa894;
   --border-lcd: #7b8372;
@@ -58,8 +58,8 @@
   --color-lcd-flag-inactive: rgba(26, 30, 23, 0.18);
   --color-lcd-cursor: #1a1e17;
 
-  --bg-key-default: #53596d;
-  --border-key: #434858;
+  --bg-key-default: #4f5569;
+  --border-key: #3d4254;
   --color-key-text: #ffffff;
 
   --bg-key-shift: #dbe0e6;
@@ -111,14 +111,18 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--bg-app);
+  position: relative;
 }
 
-/* iPhone Dynamic Island / Safe Area Spacer */
-.safe-area-spacer {
-  height: env(safe-area-inset-top, 0px);
-  min-height: 8px;
-  width: 100%;
-  flex-shrink: 0;
+/* Calculator Chassis (Fills 100% of Screen Height) */
+.calculator-chassis {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-chassis);
+  padding: max(env(safe-area-inset-top, 0px), 8px) 8px max(env(safe-area-inset-bottom, 0px), 8px) 8px;
+  overflow: hidden;
+  height: 100%;
 }
 
 /* App Header (Brand Switcher & Utilities) */
@@ -126,13 +130,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 12px 6px 12px;
+  padding: 4px 6px 6px 6px;
   flex-shrink: 0;
 }
 
 .brand-toggle-group {
   display: flex;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(128, 128, 128, 0.2);
   border-radius: 8px;
   padding: 2px;
   gap: 2px;
@@ -148,6 +152,10 @@ body {
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+[data-theme="casio-classic"] .theme-tab-btn {
+  color: #4b5563;
 }
 
 .theme-tab-btn.active {
@@ -172,21 +180,8 @@ body {
   padding: 4px;
 }
 
-.header-btn:active {
-  transform: scale(0.9);
-}
-
-/* Calculator Chassis */
-.calculator-chassis {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--bg-chassis);
-  border-top: 1px solid var(--border-chassis);
-  border-radius: 18px 18px 0 0;
-  padding: 8px 10px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
+[data-theme="casio-classic"] .header-btn {
+  color: #374151;
 }
 
 /* Casio Classic Header */
@@ -204,14 +199,14 @@ body {
 }
 
 .casio-logo {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 900;
   letter-spacing: 1px;
   color: #1a1e17;
 }
 
 .casio-model {
-  font-size: 12px;
+  font-size: 11px;
   font-style: italic;
   font-weight: 700;
   color: #242930;
@@ -231,15 +226,15 @@ body {
 }
 
 .solar-cell {
-  width: 80px;
-  height: 20px;
+  width: 76px;
+  height: 18px;
   background: linear-gradient(to right, #381f18, #4e2920, #381f18);
   border: 1.5px solid #23120d;
   border-radius: 2px;
 }
 
 .two-way-power {
-  font-size: 8px;
+  font-size: 7.5px;
   font-weight: 800;
   color: #555e6d;
 }
@@ -247,21 +242,21 @@ body {
 /* LCD Bezel & Screen */
 .lcd-bezel {
   flex-shrink: 0;
-  padding: 4px;
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 10px;
-  margin-bottom: 6px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 9px;
+  margin-bottom: 4px;
 }
 
 .lcd-screen {
   background-color: var(--bg-lcd);
   border: 1.5px solid var(--border-lcd);
-  border-radius: 8px;
-  height: 110px;
+  border-radius: 7px;
+  height: 105px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: 5px 8px;
   font-family: var(--font-family-lcd);
   color: var(--color-lcd-text);
   box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
@@ -271,7 +266,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   border-bottom: 1px solid rgba(128, 128, 128, 0.15);
   padding-bottom: 2px;
@@ -309,7 +304,7 @@ body {
 .cursor {
   display: inline-block;
   width: 2.5px;
-  height: 22px;
+  height: 20px;
   background-color: var(--color-lcd-cursor);
   animation: blink 0.9s step-end infinite;
   margin: 0 1px;
@@ -324,7 +319,7 @@ body {
   font-size: 20px;
   font-weight: 700;
   text-align: right;
-  min-height: 26px;
+  min-height: 24px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -352,7 +347,7 @@ body {
   display: var(--calces-toolbar-display);
   justify-content: space-between;
   align-items: center;
-  padding: 4px 6px 8px 6px;
+  padding: 2px 4px 6px 4px;
   flex-shrink: 0;
 }
 
@@ -381,41 +376,52 @@ body {
   cursor: pointer;
 }
 
-/* Keypad Layouts */
+/* Keypad Wrapper (Expands to Fill Screen) */
+.keypad-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Keypad Grids */
 .keypad-grid-func {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  gap: 3px 4px;
-  margin-bottom: 5px;
-  flex: 1.2;
+  gap: 3px 3.5px;
+  margin-bottom: 4px;
+  flex: 1.25;
+  min-height: 0;
 }
 
 .keypad-grid-numpad {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  gap: 3px 5px;
-  flex: 1.1;
-  padding-bottom: env(safe-area-inset-bottom, 8px);
+  gap: 3px 4.5px;
+  flex: 1;
+  min-height: 0;
 }
 
-/* Key Cell (Sublabels + Button Unit) */
+/* Key Cell */
 .key-cell {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  overflow: visible;
+  justify-content: space-between;
+  min-height: 0;
 }
 
 .key-sublabels-bar {
   display: flex;
   justify-content: space-between;
-  padding: 0 2px 2px 2px;
-  height: 12px;
-  font-size: 8px;
+  padding: 0 1px 1px 1px;
+  height: 11px;
+  font-size: 7.5px;
   font-weight: 800;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .sublabel {
@@ -430,27 +436,29 @@ body {
   color: var(--color-sublabel-alpha);
 }
 
-/* Calc Button Styling */
+/* Calc Button Styling (Fills Cell Completely) */
 .calc-key {
   flex: 1;
-  min-height: 32px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
   border: 1px solid var(--border-key);
-  border-radius: 7px;
+  border-radius: 6px;
   background-color: var(--bg-key-default);
   color: var(--color-key-text);
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.4);
-  transition: transform 0.05s ease, filter 0.05s ease;
+  box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.35);
+  transition: transform 0.05s ease;
 }
 
 .calc-key:active {
   transform: translateY(1.5px);
-  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: none;
   filter: brightness(1.2);
 }
 
@@ -474,7 +482,7 @@ body {
 }
 
 .btn-nav {
-  background-color: #1e2226 !important;
+  background-color: #1a1e22 !important;
 }
 
 .btn-num {
@@ -483,47 +491,50 @@ body {
 }
 
 [data-theme="casio-classic"] .btn-num {
-  background-color: #f6f8fa !important;
+  background-color: #f7f9fb !important;
   color: #1a1e17 !important;
-  border-color: #ced3dc !important;
+  border-color: #cbd1db !important;
 }
 
-[data-theme="casio-classic"] .btn-operator {
-  background-color: #e4e7ec !important;
-  color: #1a1e17 !important;
-}
-
+[data-theme="casio-classic"] .btn-operator,
 [data-theme="casio-classic"] .btn-equals {
-  background-color: #e4e7ec !important;
+  background-color: #e2e6eb !important;
   color: #1a1e17 !important;
 }
 
-/* Modals & Overlays */
+/* =========================================================
+   MODALS & DRAWERS (SAFE-AREA OPTIMIZED FOR IPHONE)
+   ========================================================= */
+
 .modal-overlay, .drawer-overlay, .overlay-panel {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.78);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
+  z-index: 10000;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  padding: max(env(safe-area-inset-top, 0px), 50px) 16px max(env(safe-area-inset-bottom, 0px), 20px) 16px;
 }
 
 .modal-overlay.hidden, .drawer-overlay.hidden, .overlay-panel.hidden {
   display: none !important;
 }
 
+/* Modal Card */
 .modal-card {
-  width: 90%;
-  max-width: 380px;
-  max-height: 80vh;
+  width: 100%;
+  max-width: 390px;
+  max-height: 85vh;
   background-color: #1b1e22;
   border: 1px solid #2d3339;
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 16px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
 }
 
 .modal-header, .drawer-header, .panel-header {
@@ -536,21 +547,76 @@ body {
 }
 
 .modal-header h3, .drawer-header h3, .panel-header h3 {
-  font-size: 15px;
+  font-size: 16px;
+  font-weight: 700;
   color: #60a5fa;
 }
 
-.close-btn {
-  background: transparent;
-  border: none;
-  color: #9ca3af;
+/* Close Button (Large 38px Touch Area) */
+.btn-close-modal {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
   font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  border: none;
+  transition: background 0.15s ease;
+}
+
+.btn-close-modal:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Modal Footer & Done Button */
+.modal-footer, .drawer-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.btn-done {
+  padding: 10px 24px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-done:active {
+  background: #1d4ed8;
+}
+
+/* Drawer Content (Safe Area Top + Bottom) */
+.drawer-content {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 88%;
+  max-width: 360px;
+  background-color: #16181b;
+  border-left: 1px solid #2a2f35;
+  padding: max(env(safe-area-inset-top, 0px), 54px) 16px max(env(safe-area-inset-bottom, 0px), 20px) 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
 }
 
 .custom-scroll {
   overflow-y: auto;
-  max-height: 55vh;
+  max-height: 60vh;
 }
 
 .mode-list {
@@ -580,7 +646,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .var-card {
@@ -614,11 +680,12 @@ body {
 }
 
 .btn-sm {
-  padding: 4px 8px;
-  font-size: 10px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
   background-color: #2563eb;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   color: #fff;
   cursor: pointer;
 }
@@ -668,24 +735,9 @@ body {
   color: #60a5fa;
 }
 
-/* History Drawer */
-.drawer-content {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 85%;
-  max-width: 340px;
-  background-color: #1a1d21;
-  border-left: 1px solid #2e353c;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
 .history-card {
-  background: #22272c;
-  border: 1px solid #323941;
+  background: #202428;
+  border: 1px solid #2e353c;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 8px;
@@ -693,13 +745,13 @@ body {
 }
 
 .hist-expr {
-  font-size: 12px;
+  font-size: 13px;
   color: #9ca3af;
 }
 
 .hist-res {
   font-family: var(--font-family-lcd);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
   color: #4caf50;
   margin-top: 3px;
@@ -707,13 +759,7 @@ body {
 
 /* Graphing Panel */
 .overlay-panel {
-  position: fixed;
-  inset: 0;
-  background-color: #101214;
-  z-index: 1100;
-  display: flex;
   flex-direction: column;
-  padding: 16px;
 }
 
 .graph-input-row {
@@ -737,6 +783,7 @@ body {
   border: 1px solid #2d333b;
   border-radius: 8px;
   overflow: hidden;
+  min-height: 240px;
 }
 
 #graph-canvas {

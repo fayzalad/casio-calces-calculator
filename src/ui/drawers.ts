@@ -4,12 +4,24 @@ import { CASIO_CONVERSIONS } from '../math/conversions';
 import { CalculatorMode, AngleUnit, UITheme } from '../types/calculator';
 
 export function setupDrawersAndModals(): void {
+  setupBackdropClose();
   setupModeModal();
   setupVariableModal();
   setupConstantsModal();
   setupConversionsModal();
   setupHistoryDrawer();
   setupSettingsModal();
+}
+
+function setupBackdropClose(): void {
+  const overlays = document.querySelectorAll<HTMLElement>('.modal-overlay, .drawer-overlay');
+  overlays.forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        overlay.classList.add('hidden');
+      }
+    });
+  });
 }
 
 function setupModeModal(): void {
@@ -48,7 +60,6 @@ function setupModeModal(): void {
         store.setMode(mode);
         modal.classList.add('hidden');
 
-        // If graph mode selected, open graph panel
         const graphPanel = document.getElementById('graph-panel');
         if (graphPanel) {
           if (mode === 'GRAPH') graphPanel.classList.remove('hidden');
@@ -58,8 +69,8 @@ function setupModeModal(): void {
     });
   }
 
-  modal.querySelector('.close-btn')?.addEventListener('click', () => {
-    modal.classList.add('hidden');
+  modal.querySelectorAll('.close-btn, .btn-done').forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.add('hidden'));
   });
 }
 
@@ -117,8 +128,8 @@ function setupVariableModal(): void {
     renderVars();
   });
 
-  modal.querySelector('.close-btn')?.addEventListener('click', () => {
-    modal.classList.add('hidden');
+  modal.querySelectorAll('.close-btn, .btn-done').forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.add('hidden'));
   });
 }
 
@@ -165,8 +176,8 @@ function setupConstantsModal(): void {
   searchInput?.addEventListener('input', () => renderList(searchInput.value));
   renderList();
 
-  modal.querySelector('.close-btn')?.addEventListener('click', () => {
-    modal.classList.add('hidden');
+  modal.querySelectorAll('.close-btn, .btn-done').forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.add('hidden'));
   });
 }
 
@@ -217,8 +228,8 @@ function setupConversionsModal(): void {
   searchInput?.addEventListener('input', () => renderList(searchInput.value));
   renderList();
 
-  modal.querySelector('.close-btn')?.addEventListener('click', () => {
-    modal.classList.add('hidden');
+  modal.querySelectorAll('.close-btn, .btn-done').forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.add('hidden'));
   });
 }
 
@@ -231,7 +242,7 @@ function setupHistoryDrawer(): void {
     if (!list) return;
 
     if (store.history.length === 0) {
-      list.innerHTML = `<div class="empty-msg">No calculation history yet.</div>`;
+      list.innerHTML = `<div class="empty-msg" style="padding: 20px; color: #9ca3af; text-align: center;">No calculation history yet.</div>`;
       return;
     }
 
@@ -265,8 +276,8 @@ function setupHistoryDrawer(): void {
     renderHistory();
   });
 
-  drawer.querySelector('.close-btn')?.addEventListener('click', () => {
-    drawer.classList.add('hidden');
+  drawer.querySelectorAll('.close-btn, .btn-done').forEach(btn => {
+    btn.addEventListener('click', () => drawer.classList.add('hidden'));
   });
 }
 
@@ -309,7 +320,7 @@ function setupSettingsModal(): void {
     });
   }
 
-  modal.querySelector('.close-btn')?.addEventListener('click', () => {
-    modal.classList.add('hidden');
+  modal.querySelectorAll('.close-btn, .btn-done').forEach(btn => {
+    btn.addEventListener('click', () => modal.classList.add('hidden'));
   });
 }
