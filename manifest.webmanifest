@@ -1,0 +1,18 @@
+{
+  "name": "Casio fx-991ES Plus & CalcES Scientific Calculator",
+  "short_name": "Casio 991",
+  "description": "Full scientific calculator emulating Casio fx-991ES Plus & CalcES with Natural Display and all mathematical functions",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#121415",
+  "theme_color": "#161819",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

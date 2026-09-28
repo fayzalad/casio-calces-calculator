@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="calces-dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Casio fx-991ES Plus & CalcES Scientific Calculator</title>
+
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Casio 991">
+  <meta name="theme-color" content="#161819">
+  <link rel="manifest" href="./manifest.webmanifest">
+
+  <script type="module" crossorigin src="./assets/index-CkwFwS7y.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-O8QzCqxL.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Bar for Theme Switcher & Quick Utilities -->
+    <header class="top-nav-bar">
+      <div class="brand-switch">
+        <button id="theme-casio-btn" class="theme-toggle-btn" title="Classic Casio fx-991ES Skin">Casio 991ES</button>
+        <button id="theme-calces-btn" class="theme-toggle-btn active" title="Modern CalcES OLED Skin">CalcES 991</button>
+      </div>
+      <div class="quick-nav-tools">
+        <button id="quick-deg-btn" class="pill-btn">DEG</button>
+        <button id="quick-graph-btn" class="icon-btn" title="2D Grapher">📈</button>
+        <button id="quick-hist-btn" class="icon-btn" title="Calculation History">⏱️</button>
+        <button id="quick-vars-btn" class="icon-btn" title="Variables Manager">🔤</button>
+        <button id="quick-settings-btn" class="icon-btn" title="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- Calculator Body / Chassis -->
+    <main class="calculator-chassis">
+      <!-- Casio Physical Topplate (visible in classic skin) -->
+      <div class="casio-header">
+        <div class="casio-branding">
+          <span class="casio-logo">CASIO</span>
+          <span class="casio-model">fx-991ES PLUS</span>
+          <span class="casio-vpam">NATURAL-V.P.A.M.</span>
+        </div>
+        <div class="solar-panel-housing">
+          <div class="solar-cell"></div>
+          <span class="two-way-power">TWO WAY POWER</span>
+        </div>
+      </div>
+
+      <!-- LCD Display Bezel -->
+      <section class="lcd-bezel">
+        <div class="lcd-screen">
+          <div id="lcd-status" class="lcd-status"></div>
+          <div id="lcd-expression" class="lcd-expression"></div>
+          <div id="lcd-result" class="lcd-result"></div>
+        </div>
+      </section>
+
+      <!-- Keypad -->
+      <section id="keypad" class="keypad-grid"></section>
+    </main>
+
+    <!-- Graphing Panel Overlay -->
+    <div id="graph-panel" class="overlay-panel hidden">
+      <div class="panel-header">
+        <h3>2D Function Grapher (y = f(x))</h3>
+        <div class="panel-actions">
+          <button id="graph-reset-btn" class="btn-sm">Reset View</button>
+          <button id="graph-close-btn" class="btn-sm close-btn">✕</button>
+        </div>
+      </div>
+      <div class="graph-input-row">
+        <span>f(x) = </span>
+        <input type="text" id="graph-expr-input" value="sin(x)" placeholder="e.g. sin(x), x^2 - 4">
+        <button id="graph-plot-btn" class="btn-sm">Plot</button>
+      </div>
+      <div class="graph-canvas-container">
+        <canvas id="graph-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Modals & Drawers -->
+    <div id="mode-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Select Calculation Mode</h3>
+          <button class="close-btn">✕</button>
+        </div>
+        <div class="mode-list"></div>
+      </div>
+    </div>
+
+    <div id="var-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Variables Manager</h3>
+          <button class="close-btn">✕</button>
+        </div>
+        <div class="vars-grid"></div>
+        <div class="modal-footer">
+          <button class="btn-sm btn-clear-all">Clear All Variables (CLRv)</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="constants-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Scientific Constants (01–40)</h3>
+          <button class="close-btn">✕</button>
+        </div>
+        <input type="text" class="const-search" placeholder="Search constant name or symbol...">
+        <div class="constants-list custom-scroll"></div>
+      </div>
+    </div>
+
+    <div id="conversions-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Metric Conversions (01–40)</h3>
+          <button class="close-btn">✕</button>
+        </div>
+        <input type="text" class="conv-search" placeholder="Search conversion...">
+        <div class="conversions-list custom-scroll"></div>
+      </div>
+    </div>
+
+    <div id="history-drawer" class="drawer-overlay hidden">
+      <div class="drawer-content">
+        <div class="drawer-header">
+          <h3>Calculation History</h3>
+          <button class="close-btn">✕</button>
+        </div>
+        <div class="history-list custom-scroll"></div>
+        <div class="drawer-footer">
+          <button class="btn-sm btn-clear-hist">Clear History</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="settings-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Calculator Settings</h3>
+          <button class="close-btn">✕</button>
+        </div>
+        <div class="settings-content">
+          <div class="setting-row">
+            <label for="setting-theme">UI Theme / Skin</label>
+            <select id="setting-theme">
+              <option value="calces-dark">Modern CalcES Dark (OLED)</option>
+              <option value="casio-classic">Classic Casio fx-991ES PLUS</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="setting-angle">Angle Unit</label>
+            <select id="setting-angle">
+              <option value="DEG">Degree (DEG)</option>
+              <option value="RAD">Radian (RAD)</option>
+              <option value="GRA">Gradian (GRA)</option>
+            </select>
+          </div>
+          <div class="setting-row">
+            <label for="setting-sound">Key Click Sound</label>
+            <input type="checkbox" id="setting-sound" checked>
+          </div>
+          <div class="setting-row">
+            <label for="setting-haptics">Vibration / Haptics</label>
+            <input type="checkbox" id="setting-haptics" checked>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
