@@ -3,38 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Casio fx-991ES Plus & CalcES Scientific Calculator</title>
+  <title>Scientific Calculator Plus 991</title>
 
   <!-- PWA & Mobile Web App Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Casio 991">
-  <meta name="theme-color" content="#161819">
+  <meta name="apple-mobile-web-app-title" content="CalcES 991">
+  <meta name="theme-color" content="#121415">
   <link rel="manifest" href="./manifest.webmanifest">
 
-  <script type="module" crossorigin src="./assets/index-CkwFwS7y.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-O8QzCqxL.css">
+  <script type="module" crossorigin src="./assets/index-DdaX6-fs.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CSxGOOQH.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Top Bar for Theme Switcher & Quick Utilities -->
-    <header class="top-nav-bar">
-      <div class="brand-switch">
-        <button id="theme-casio-btn" class="theme-toggle-btn" title="Classic Casio fx-991ES Skin">Casio 991ES</button>
-        <button id="theme-calces-btn" class="theme-toggle-btn active" title="Modern CalcES OLED Skin">CalcES 991</button>
+  <div id="app" class="calculator-app">
+    <!-- Top System Spacer for iPhone Safe Area / Dynamic Island -->
+    <div class="safe-area-spacer"></div>
+
+    <!-- CalcES Header / Brand Switcher Bar -->
+    <header class="app-header">
+      <div class="brand-toggle-group">
+        <button id="theme-calces-btn" class="theme-tab-btn active">CalcES 991</button>
+        <button id="theme-casio-btn" class="theme-tab-btn">Casio 991ES</button>
       </div>
-      <div class="quick-nav-tools">
-        <button id="quick-deg-btn" class="pill-btn">DEG</button>
-        <button id="quick-graph-btn" class="icon-btn" title="2D Grapher">📈</button>
-        <button id="quick-hist-btn" class="icon-btn" title="Calculation History">⏱️</button>
-        <button id="quick-vars-btn" class="icon-btn" title="Variables Manager">🔤</button>
-        <button id="quick-settings-btn" class="icon-btn" title="Settings">⚙️</button>
+      <div class="header-right-tools">
+        <button id="quick-hist-btn" class="header-btn" title="History">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </button>
+        <button id="quick-vars-btn" class="header-btn" title="Variables">
+          <span style="font-weight: 800; font-size: 13px;">[x]</span>
+        </button>
       </div>
     </header>
 
     <!-- Calculator Body / Chassis -->
     <main class="calculator-chassis">
-      <!-- Casio Physical Topplate (visible in classic skin) -->
+      <!-- Casio Physical Top Header (visible in Casio Classic skin) -->
       <div class="casio-header">
         <div class="casio-branding">
           <span class="casio-logo">CASIO</span>
@@ -47,20 +51,48 @@
         </div>
       </div>
 
-      <!-- LCD Display Bezel -->
+      <!-- LCD Display Bezel & Screen -->
       <section class="lcd-bezel">
         <div class="lcd-screen">
-          <div id="lcd-status" class="lcd-status"></div>
-          <div id="lcd-expression" class="lcd-expression"></div>
+          <div class="lcd-header-line">
+            <span class="calces-mode-indicators">SCI &nbsp; MATH &nbsp; DECI</span>
+            <div id="lcd-status" class="lcd-status"></div>
+          </div>
+          <div id="lcd-expression" class="lcd-expression">
+            <span class="cursor"></span>
+          </div>
           <div id="lcd-result" class="lcd-result"></div>
         </div>
       </section>
 
-      <!-- Keypad -->
-      <section id="keypad" class="keypad-grid"></section>
+      <!-- CalcES Icon Toolbar (Green Menu, Sigma, Settings, Zoom -, Zoom +, DEG) -->
+      <nav class="calces-icon-toolbar">
+        <button id="tb-menu-btn" class="tb-btn" title="Menu">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="#4caf50" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <button id="tb-sigma-btn" class="tb-btn" title="Formulas">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 8h8l-5 4 5 4H8"/></svg>
+        </button>
+        <button id="tb-settings-btn" class="tb-btn" title="Settings">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button id="tb-zoomout-btn" class="tb-btn" title="Zoom Out">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </button>
+        <button id="tb-zoomin-btn" class="tb-btn" title="Zoom In">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#9ca3af" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </button>
+        <button id="quick-deg-btn" class="angle-pill-btn">DEG</button>
+      </nav>
+
+      <!-- Upper Keypad: Scientific & Function Keys (6 Columns) -->
+      <section id="func-keypad" class="keypad-grid-func"></section>
+
+      <!-- Lower Keypad: Numpad & Arithmetic Keys (5 Columns) -->
+      <section id="numpad-keypad" class="keypad-grid-numpad"></section>
     </main>
 
-    <!-- Graphing Panel Overlay -->
+    <!-- 2D Function Grapher Modal -->
     <div id="graph-panel" class="overlay-panel hidden">
       <div class="panel-header">
         <h3>2D Function Grapher (y = f(x))</h3>
@@ -79,7 +111,7 @@
       </div>
     </div>
 
-    <!-- Modals & Drawers -->
+    <!-- Mode Selector Modal -->
     <div id="mode-modal" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
@@ -90,6 +122,7 @@
       </div>
     </div>
 
+    <!-- Variables Modal -->
     <div id="var-modal" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
@@ -103,6 +136,7 @@
       </div>
     </div>
 
+    <!-- Constants Modal -->
     <div id="constants-modal" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
@@ -114,6 +148,7 @@
       </div>
     </div>
 
+    <!-- Conversions Modal -->
     <div id="conversions-modal" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
@@ -125,6 +160,7 @@
       </div>
     </div>
 
+    <!-- History Drawer -->
     <div id="history-drawer" class="drawer-overlay hidden">
       <div class="drawer-content">
         <div class="drawer-header">
@@ -138,6 +174,7 @@
       </div>
     </div>
 
+    <!-- Settings Modal -->
     <div id="settings-modal" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-header">
