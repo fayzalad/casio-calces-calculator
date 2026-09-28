@@ -17,10 +17,11 @@ window.addEventListener('DOMContentLoaded', () => {
     new DisplayRenderer(statusEl, exprEl, resultEl);
   }
 
-  // 2. Render Keypad
-  const keypadContainer = document.getElementById('keypad');
-  if (keypadContainer) {
-    renderKeypad(keypadContainer);
+  // 2. Render Keypad into split grids (Function & Numpad)
+  const funcContainer = document.getElementById('func-keypad');
+  const numContainer = document.getElementById('numpad-keypad');
+  if (funcContainer && numContainer) {
+    renderKeypad(funcContainer, numContainer);
   }
 
   // 3. Setup Modals, Drawers, and Settings
@@ -49,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   updateThemeButtons();
 
-  // 5. Setup Quick Nav Bar Buttons
+  // 5. Setup CalcES Toolbar Buttons
   const quickDegBtn = document.getElementById('quick-deg-btn');
   const updateDegPill = () => {
     if (quickDegBtn) quickDegBtn.textContent = store.settings.angleUnit;
@@ -64,16 +65,24 @@ window.addEventListener('DOMContentLoaded', () => {
   updateDegPill();
   store.subscribe(updateDegPill);
 
+  document.getElementById('tb-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mode-modal')?.classList.remove('hidden');
+  });
+
+  document.getElementById('tb-sigma-btn')?.addEventListener('click', () => {
+    document.getElementById('constants-modal')?.classList.remove('hidden');
+  });
+
+  document.getElementById('tb-settings-btn')?.addEventListener('click', () => {
+    document.getElementById('settings-modal')?.classList.remove('hidden');
+  });
+
   document.getElementById('quick-hist-btn')?.addEventListener('click', () => {
     document.getElementById('history-drawer')?.classList.remove('hidden');
   });
 
   document.getElementById('quick-vars-btn')?.addEventListener('click', () => {
     document.getElementById('var-modal')?.classList.remove('hidden');
-  });
-
-  document.getElementById('quick-settings-btn')?.addEventListener('click', () => {
-    document.getElementById('settings-modal')?.classList.remove('hidden');
   });
 
   // 6. Setup Grapher Canvas & Panel
@@ -111,12 +120,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('graph-plot-btn')?.addEventListener('click', plotCurrentExpr);
     document.getElementById('graph-reset-btn')?.addEventListener('click', () => plotter?.resetView());
 
-    document.getElementById('quick-graph-btn')?.addEventListener('click', () => {
-      graphPanel?.classList.remove('hidden');
-      setTimeout(resizeGraph, 50);
-      plotCurrentExpr();
-    });
-
     document.getElementById('graph-close-btn')?.addEventListener('click', () => {
       graphPanel?.classList.add('hidden');
     });
@@ -124,7 +127,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 7. Physical Desktop Keyboard Support
   window.addEventListener('keydown', (e) => {
-    // Ignore keystrokes when typing into text inputs
     if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
       return;
     }

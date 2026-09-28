@@ -1,9 +1,9 @@
 /* =========================================================
-   CASIO fx-991ES PLUS & CALCES DUAL-SKIN DESIGN SYSTEM
+   CALCES 991 & CASIO fx-991ES PLUS DESIGN SYSTEM
    ========================================================= */
 
 :root {
-  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-family-lcd: 'Courier New', Courier, 'Lucida Console', Monaco, monospace;
 }
 
@@ -11,72 +11,72 @@
    CALCES DARK (OLED) THEME (Default)
    --------------------------------------------------------- */
 [data-theme="calces-dark"] {
-  --bg-app: #121415;
-  --bg-topbar: #1a1d1f;
-  --bg-chassis: #1e2225;
-  --border-chassis: #2d3338;
-  
-  --bg-lcd: #141718;
-  --border-lcd: #282d31;
+  --bg-app: #0e1011;
+  --bg-chassis: #16181a;
+  --border-chassis: #252a2e;
+
+  --bg-lcd: #0a0b0c;
+  --border-lcd: #222629;
   --color-lcd-text: #ffffff;
   --color-lcd-flag-active: #4caf50;
-  --color-lcd-flag-inactive: #374151;
+  --color-lcd-flag-inactive: #2d3338;
   --color-lcd-cursor: #00e676;
 
-  --bg-key-num: #282d31;
-  --bg-key-func: #31373c;
+  --bg-key-default: #252a2e;
+  --border-key: #32383e;
+  --color-key-text: #ffffff;
+
   --bg-key-shift: #f5b300;
+  --color-key-shift: #000000;
+
   --bg-key-alpha: #388e3c;
+  --color-key-alpha: #ffffff;
+
   --bg-key-del: #2e7d32;
   --bg-key-ac: #2e7d32;
-  --bg-key-nav: #262b2f;
-  --bg-key-equals: #31373c;
-
-  --color-key-text: #ffffff;
-  --color-key-shift-text: #000000;
-  --color-key-alpha-text: #ffffff;
+  --color-key-del-ac: #ffffff;
 
   --color-sublabel-shift: #f5b300;
   --color-sublabel-alpha: #4caf50;
 
-  --solar-display: none;
   --casio-header-display: none;
+  --calces-toolbar-display: flex;
 }
 
 /* ---------------------------------------------------------
    CLASSIC CASIO fx-991ES PLUS THEME
    --------------------------------------------------------- */
 [data-theme="casio-classic"] {
-  --bg-app: #2b3038;
-  --bg-topbar: #1f2329;
-  --bg-chassis: #dfe3e8;
-  --border-chassis: #b8bec7;
+  --bg-app: #282c34;
+  --bg-chassis: #e3e6ea;
+  --border-chassis: #b4bac3;
 
   --bg-lcd: #9fa894;
   --border-lcd: #7b8372;
   --color-lcd-text: #1a1e17;
   --color-lcd-flag-active: #1a1e17;
-  --color-lcd-flag-inactive: rgba(26, 30, 23, 0.15);
+  --color-lcd-flag-inactive: rgba(26, 30, 23, 0.18);
   --color-lcd-cursor: #1a1e17;
 
-  --bg-key-num: #f3f5f7;
-  --bg-key-func: #5a6072;
-  --bg-key-shift: #e4e7eb;
-  --bg-key-alpha: #e4e7eb;
+  --bg-key-default: #53596d;
+  --border-key: #434858;
+  --color-key-text: #ffffff;
+
+  --bg-key-shift: #dbe0e6;
+  --color-key-shift: #c68a00;
+
+  --bg-key-alpha: #dbe0e6;
+  --color-key-alpha: #c62828;
+
   --bg-key-del: #e67e22;
   --bg-key-ac: #e67e22;
-  --bg-key-nav: #788094;
-  --bg-key-equals: #f3f5f7;
-
-  --color-key-text: #1a1e17;
-  --color-key-shift-text: #a87400;
-  --color-key-alpha-text: #b71c1c;
+  --color-key-del-ac: #ffffff;
 
   --color-sublabel-shift: #c68a00;
   --color-sublabel-alpha: #c62828;
 
-  --solar-display: flex;
   --casio-header-display: flex;
+  --calces-toolbar-display: flex;
 }
 
 /* Base Reset */
@@ -88,112 +88,114 @@
   user-select: none;
 }
 
-body {
-  font-family: var(--font-family-base);
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   background-color: var(--bg-app);
-  color: #fff;
-  min-height: 100vh;
+  font-family: var(--font-family-base);
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-  overflow-x: hidden;
 }
 
-#app {
+.calculator-app {
   width: 100%;
   max-width: 440px;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  max-height: 980px;
+  background-color: var(--bg-app);
 }
 
-/* Top Bar */
-.top-nav-bar {
+/* iPhone Dynamic Island / Safe Area Spacer */
+.safe-area-spacer {
+  height: env(safe-area-inset-top, 0px);
+  min-height: 8px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* App Header (Brand Switcher & Utilities) */
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
-  background-color: var(--bg-topbar);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  z-index: 10;
+  padding: 4px 12px 6px 12px;
+  flex-shrink: 0;
 }
 
-.brand-switch {
+.brand-toggle-group {
   display: flex;
-  gap: 4px;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 3px;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
 }
 
-.theme-toggle-btn {
+.theme-tab-btn {
   background: transparent;
   border: none;
   color: #9ca3af;
   font-size: 11px;
-  font-weight: 600;
-  padding: 4px 10px;
+  font-weight: 700;
+  padding: 3px 10px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.theme-toggle-btn.active {
-  background: #3b82f6;
+.theme-tab-btn.active {
+  background: #2563eb;
   color: #ffffff;
 }
 
-.quick-nav-tools {
+.header-right-tools {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.pill-btn {
-  background: #2563eb;
-  color: #fff;
-  border: none;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.icon-btn {
+.header-btn {
   background: transparent;
   border: none;
-  font-size: 16px;
+  color: #9ca3af;
   cursor: pointer;
-  padding: 2px;
-  transition: transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
 }
 
-.icon-btn:active {
+.header-btn:active {
   transform: scale(0.9);
 }
 
 /* Calculator Chassis */
 .calculator-chassis {
   flex: 1;
-  background-color: var(--bg-chassis);
-  border: 1px solid var(--border-chassis);
   display: flex;
   flex-direction: column;
-  padding: 12px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  background-color: var(--bg-chassis);
+  border-top: 1px solid var(--border-chassis);
+  border-radius: 18px 18px 0 0;
+  padding: 8px 10px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
-/* Casio Header */
+/* Casio Classic Header */
 .casio-header {
   display: var(--casio-header-display);
   justify-content: space-between;
   align-items: center;
-  padding: 4px 8px 10px 8px;
+  padding: 2px 4px 6px 4px;
+  flex-shrink: 0;
 }
 
 .casio-branding {
@@ -202,109 +204,115 @@ body {
 }
 
 .casio-logo {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 900;
-  letter-spacing: 1.5px;
+  letter-spacing: 1px;
   color: #1a1e17;
 }
 
 .casio-model {
-  font-size: 13px;
+  font-size: 12px;
   font-style: italic;
   font-weight: 700;
   color: #242930;
 }
 
 .casio-vpam {
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 800;
   color: #1b8a5a;
-  letter-spacing: 0.5px;
 }
 
 .solar-panel-housing {
-  display: var(--solar-display);
+  display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 2px;
 }
 
 .solar-cell {
-  width: 90px;
-  height: 22px;
-  background: linear-gradient(to right, #40231b, #593126, #40231b);
-  border: 1.5px solid #2e1a14;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  width: 80px;
+  height: 20px;
+  background: linear-gradient(to right, #381f18, #4e2920, #381f18);
+  border: 1.5px solid #23120d;
+  border-radius: 2px;
 }
 
 .two-way-power {
   font-size: 8px;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  color: #4b5563;
+  color: #555e6d;
 }
 
-/* LCD Display Bezel & Screen */
+/* LCD Bezel & Screen */
 .lcd-bezel {
-  padding: 6px;
-  background: rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.4);
   border-radius: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .lcd-screen {
   background-color: var(--bg-lcd);
-  border: 2px solid var(--border-lcd);
+  border: 1.5px solid var(--border-lcd);
   border-radius: 8px;
-  min-height: 125px;
+  height: 110px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 6px 10px;
   font-family: var(--font-family-lcd);
   color: var(--color-lcd-text);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25);
-  position: relative;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
-.lcd-flags {
+.lcd-header-line {
   display: flex;
-  gap: 6px;
-  font-size: 10px;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 9.5px;
   font-weight: 700;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
-  padding-bottom: 3px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+  padding-bottom: 2px;
 }
 
-.lcd-flags .flag {
+.calces-mode-indicators {
+  color: #6b7280;
+  letter-spacing: 0.5px;
+}
+
+.lcd-status {
+  display: flex;
+  gap: 5px;
+}
+
+.lcd-status .flag {
   color: var(--color-lcd-flag-inactive);
 }
 
-.lcd-flags .flag.active {
+.lcd-status .flag.active {
   color: var(--color-lcd-flag-active);
   font-weight: 900;
 }
 
 .lcd-expression {
   flex: 1;
-  font-size: 19px;
-  line-height: 1.3;
-  margin-top: 4px;
-  overflow-x: auto;
-  white-space: nowrap;
+  font-size: 18px;
   display: flex;
   align-items: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-top: 2px;
 }
 
 .cursor {
   display: inline-block;
-  width: 2px;
-  height: 20px;
+  width: 2.5px;
+  height: 22px;
   background-color: var(--color-lcd-cursor);
-  animation: blink 1s step-end infinite;
-  margin-left: 1px;
-  margin-right: 1px;
+  animation: blink 0.9s step-end infinite;
+  margin: 0 1px;
 }
 
 @keyframes blink {
@@ -313,10 +321,10 @@ body {
 }
 
 .lcd-result {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   text-align: right;
-  min-height: 30px;
+  min-height: 26px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -327,8 +335,8 @@ body {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  font-size: 16px;
-  margin: 0 4px;
+  font-size: 14px;
+  margin: 0 3px;
 }
 
 .fraction-display .bar {
@@ -339,112 +347,167 @@ body {
   margin: 1px 0;
 }
 
-/* Keypad Grid Layout */
-.keypad-grid {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: repeat(9, 1fr);
-  gap: 6px 5px;
+/* CalcES Icon Toolbar */
+.calces-icon-toolbar {
+  display: var(--calces-toolbar-display);
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px 8px 6px;
+  flex-shrink: 0;
 }
 
-/* Key Button Styling */
-.calc-key {
-  position: relative;
+.tb-btn {
+  background: transparent;
   border: none;
-  outline: none;
-  border-radius: 8px;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tb-btn:active {
+  transform: scale(0.85);
+}
+
+.angle-pill-btn {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Keypad Layouts */
+.keypad-grid-func {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 3px 4px;
+  margin-bottom: 5px;
+  flex: 1.2;
+}
+
+.keypad-grid-numpad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 3px 5px;
+  flex: 1.1;
+  padding-bottom: env(safe-area-inset-bottom, 8px);
+}
+
+/* Key Cell (Sublabels + Button Unit) */
+.key-cell {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
-  padding: 3px 2px 5px 2px;
-  cursor: pointer;
-  background-color: var(--bg-key-func);
-  color: var(--color-key-text);
-  box-shadow: 0 2.5px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transition: transform 0.05s ease, box-shadow 0.05s ease;
+  overflow: visible;
 }
 
-.calc-key:active {
-  transform: translateY(2px);
-  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.key-sublabels {
-  position: absolute;
-  top: -9px;
-  width: 100%;
+.key-sublabels-bar {
   display: flex;
-  justify-content: space-around;
-  pointer-events: none;
-}
-
-.sublabel {
+  justify-content: space-between;
+  padding: 0 2px 2px 2px;
+  height: 12px;
   font-size: 8px;
   font-weight: 800;
   line-height: 1;
 }
 
-.shift-label {
+.sublabel {
+  white-space: nowrap;
+}
+
+.shift-sublabel {
   color: var(--color-sublabel-shift);
 }
 
-.alpha-label {
+.alpha-sublabel {
   color: var(--color-sublabel-alpha);
 }
 
-.key-main-label {
+/* Calc Button Styling */
+.calc-key {
+  flex: 1;
+  min-height: 32px;
+  border: 1px solid var(--border-key);
+  border-radius: 7px;
+  background-color: var(--bg-key-default);
+  color: var(--color-key-text);
   font-size: 13px;
   font-weight: 700;
-  line-height: 1.1;
-  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1.5px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.05s ease, filter 0.05s ease;
 }
 
-/* Button Variants */
+.calc-key:active {
+  transform: translateY(1.5px);
+  box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.4);
+  filter: brightness(1.2);
+}
+
+/* Key Color Variants */
 .btn-shift {
   background-color: var(--bg-key-shift) !important;
-  color: var(--color-key-shift-text) !important;
+  color: var(--color-key-shift) !important;
+  border-color: #d49a00 !important;
 }
 
 .btn-alpha {
   background-color: var(--bg-key-alpha) !important;
-  color: var(--color-key-alpha-text) !important;
+  color: var(--color-key-alpha) !important;
+  border-color: #2e7d32 !important;
 }
 
-.btn-del {
+.btn-del, .btn-ac {
   background-color: var(--bg-key-del) !important;
-  color: #ffffff !important;
-}
-
-.btn-ac {
-  background-color: var(--bg-key-ac) !important;
-  color: #ffffff !important;
-}
-
-.btn-num {
-  background-color: var(--bg-key-num) !important;
-  font-size: 16px;
+  color: var(--color-key-del-ac) !important;
+  border-color: #256628 !important;
 }
 
 .btn-nav {
-  background-color: var(--bg-key-nav) !important;
+  background-color: #1e2226 !important;
 }
 
-.btn-equals {
-  background-color: var(--bg-key-equals) !important;
+.btn-num {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="casio-classic"] .btn-num {
+  background-color: #f6f8fa !important;
+  color: #1a1e17 !important;
+  border-color: #ced3dc !important;
+}
+
+[data-theme="casio-classic"] .btn-operator {
+  background-color: #e4e7ec !important;
+  color: #1a1e17 !important;
+}
+
+[data-theme="casio-classic"] .btn-equals {
+  background-color: #e4e7ec !important;
+  color: #1a1e17 !important;
 }
 
 /* Modals & Overlays */
-.modal-overlay, .drawer-overlay {
+.modal-overlay, .drawer-overlay, .overlay-panel {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
-  backdrop-filter: blur(4px);
+  z-index: 1000;
+  backdrop-filter: blur(5px);
 }
 
 .modal-overlay.hidden, .drawer-overlay.hidden, .overlay-panel.hidden {
@@ -453,15 +516,14 @@ body {
 
 .modal-card {
   width: 90%;
-  max-width: 400px;
+  max-width: 380px;
   max-height: 80vh;
-  background-color: #1e2225;
-  border: 1px solid #333a40;
+  background-color: #1b1e22;
+  border: 1px solid #2d3339;
   border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
 .modal-header, .drawer-header, .panel-header {
@@ -474,7 +536,7 @@ body {
 }
 
 .modal-header h3, .drawer-header h3, .panel-header h3 {
-  font-size: 16px;
+  font-size: 15px;
   color: #60a5fa;
 }
 
@@ -501,16 +563,12 @@ body {
   display: flex;
   gap: 12px;
   padding: 10px 14px;
-  background-color: #272d32;
-  border: 1px solid #373e44;
+  background-color: #24292e;
+  border: 1px solid #333a41;
   border-radius: 8px;
   color: #fff;
   cursor: pointer;
   text-align: left;
-}
-
-.mode-item:hover {
-  background-color: #323a41;
 }
 
 .mode-num {
@@ -521,18 +579,18 @@ body {
 .vars-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
 .var-card {
-  background-color: #262c31;
-  border: 1px solid #384148;
+  background-color: #22272c;
+  border: 1px solid #323940;
   border-radius: 8px;
-  padding: 8px;
+  padding: 6px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .var-header {
@@ -547,7 +605,7 @@ body {
 
 .var-val {
   font-family: var(--font-family-lcd);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .var-actions {
@@ -557,8 +615,8 @@ body {
 
 .btn-sm {
   padding: 4px 8px;
-  font-size: 11px;
-  background-color: #3b82f6;
+  font-size: 10px;
+  background-color: #2563eb;
   border: none;
   border-radius: 4px;
   color: #fff;
@@ -568,8 +626,8 @@ body {
 .const-search, .conv-search {
   width: 100%;
   padding: 8px 12px;
-  background: #141719;
-  border: 1px solid #333a40;
+  background: #121416;
+  border: 1px solid #2d3339;
   border-radius: 6px;
   color: #fff;
   margin-bottom: 10px;
@@ -586,12 +644,11 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: #252b30;
-  border: 1px solid #353d44;
+  background: #23282d;
+  border: 1px solid #30373e;
   border-radius: 6px;
   color: #fff;
   cursor: pointer;
-  text-align: left;
 }
 
 .const-code {
@@ -600,7 +657,7 @@ body {
 }
 
 .const-name {
-  font-size: 12px;
+  font-size: 11px;
   color: #9ca3af;
   margin-left: 8px;
 }
@@ -618,17 +675,17 @@ body {
   top: 0;
   bottom: 0;
   width: 85%;
-  max-width: 360px;
-  background-color: #1e2225;
-  border-left: 1px solid #333a40;
+  max-width: 340px;
+  background-color: #1a1d21;
+  border-left: 1px solid #2e353c;
   padding: 16px;
   display: flex;
   flex-direction: column;
 }
 
 .history-card {
-  background: #262c31;
-  border: 1px solid #373f46;
+  background: #22272c;
+  border: 1px solid #323941;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 8px;
@@ -636,24 +693,24 @@ body {
 }
 
 .hist-expr {
-  font-size: 13px;
+  font-size: 12px;
   color: #9ca3af;
 }
 
 .hist-res {
   font-family: var(--font-family-lcd);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #4caf50;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 /* Graphing Panel */
 .overlay-panel {
   position: fixed;
   inset: 0;
-  background-color: #121416;
-  z-index: 90;
+  background-color: #101214;
+  z-index: 1100;
   display: flex;
   flex-direction: column;
   padding: 16px;
@@ -663,21 +720,20 @@ body {
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .graph-input-row input {
   flex: 1;
   padding: 8px 12px;
-  background: #1e2225;
-  border: 1px solid #373e44;
+  background: #1c2024;
+  border: 1px solid #30373e;
   border-radius: 6px;
   color: #fff;
 }
 
 .graph-canvas-container {
   flex: 1;
-  position: relative;
   border: 1px solid #2d333b;
   border-radius: 8px;
   overflow: hidden;
@@ -689,7 +745,7 @@ body {
   display: block;
 }
 
-/* Settings */
+/* Settings Content */
 .settings-content {
   display: flex;
   flex-direction: column;
@@ -703,9 +759,9 @@ body {
 }
 
 .setting-row select {
-  padding: 6px 10px;
-  background: #262b2f;
-  border: 1px solid #373f46;
+  padding: 5px 8px;
+  background: #23282c;
+  border: 1px solid #333a41;
   color: #fff;
   border-radius: 6px;
 }

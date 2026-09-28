@@ -6,19 +6,14 @@ import { KeyModifier } from '../types/calculator';
 export interface KeyDefinition {
   id: string;
   primary: string;
-  primaryDisplay?: string;
   shift?: string;
-  shiftDisplay?: string;
   alpha?: string;
-  alphaDisplay?: string;
-  second?: string;
-  secondDisplay?: string;
   action: (mod: KeyModifier) => void;
   cssClass?: string;
 }
 
-export const KEY_DEFINITIONS: KeyDefinition[] = [
-  // --- ROW 1 ---
+export const FUNCTION_KEYS: KeyDefinition[] = [
+  // --- ROW 1 (6 keys) ---
   {
     id: 'key_shift',
     primary: 'SHIFT',
@@ -50,8 +45,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     action: (mod) => {
       const modeModal = document.getElementById('mode-modal');
       if (modeModal) modeModal.classList.toggle('hidden');
-    },
-    cssClass: 'btn-function'
+    }
   },
   {
     id: 'key_2nd',
@@ -60,21 +54,15 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     cssClass: 'btn-2nd'
   },
 
-  // --- ROW 2 ---
+  // --- ROW 2 (6 keys) ---
   {
     id: 'key_calc',
     primary: 'CALC',
     shift: 'SOLVE',
     alpha: '=',
     action: (mod) => {
-      if (mod === 'SHIFT') {
-        // SOLVE: Prompt or execute equation solver
-        store.evaluateExpression(true);
-      } else if (mod === 'ALPHA') {
-        store.insertText('=');
-      } else {
-        store.evaluateExpression(true);
-      }
+      if (mod === 'SHIFT' || mod === 'NORMAL') store.evaluateExpression(true);
+      else if (mod === 'ALPHA') store.insertText('=');
     }
   },
   {
@@ -133,7 +121,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     }
   },
 
-  // --- ROW 3 ---
+  // --- ROW 3 (6 keys) ---
   {
     id: 'key_frac',
     primary: '■/□',
@@ -185,19 +173,19 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
   {
     id: 'key_ln',
     primary: 'Ln',
-    shift: 'e^x',
+    shift: 'e^□',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('e^(');
       else store.insertText('ln(');
     }
   },
 
-  // --- ROW 4 ---
+  // --- ROW 4 (6 keys) ---
   {
     id: 'key_minus_sign',
     primary: '(-)',
     shift: '∠',
-    alpha: 'A',
+    alpha: 'a',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('∠');
       else if (mod === 'ALPHA') store.insertText('A');
@@ -208,7 +196,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_dms',
     primary: "° ' ''",
     shift: 'FACT',
-    alpha: 'B',
+    alpha: 'b',
     action: (mod) => {
       if (mod === 'SHIFT') store.primeFactorizeResult();
       else if (mod === 'ALPHA') store.insertText('B');
@@ -219,7 +207,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_hyp',
     primary: 'hyp',
     shift: 'Abs',
-    alpha: 'C',
+    alpha: 'c',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('abs(');
       else if (mod === 'ALPHA') store.insertText('C');
@@ -230,7 +218,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_sin',
     primary: 'Sin',
     shift: 'Sin⁻¹',
-    alpha: 'D',
+    alpha: 'd',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('asin(');
       else if (mod === 'ALPHA') store.insertText('D');
@@ -241,7 +229,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_cos',
     primary: 'Cos',
     shift: 'Cos⁻¹',
-    alpha: 'E',
+    alpha: 'e',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('acos(');
       else if (mod === 'ALPHA') store.insertText('E');
@@ -252,7 +240,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_tan',
     primary: 'Tan',
     shift: 'Tan⁻¹',
-    alpha: 'F',
+    alpha: 'f',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('atan(');
       else if (mod === 'ALPHA') store.insertText('F');
@@ -260,7 +248,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     }
   },
 
-  // --- ROW 5 ---
+  // --- ROW 5 (6 keys) ---
   {
     id: 'key_rcl',
     primary: 'RCL',
@@ -304,7 +292,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_close_paren',
     primary: ')',
     shift: ',',
-    alpha: 'X',
+    alpha: 'x',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText(',');
       else if (mod === 'ALPHA') store.insertText('X');
@@ -314,8 +302,8 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
   {
     id: 'key_sd',
     primary: 'S⇔D',
-    shift: 'a b/c ⇔ d/c',
-    alpha: 'Y',
+    shift: 'a/b→a b/c',
+    alpha: 'y',
     action: (mod) => {
       if (mod === 'ALPHA') store.insertText('Y');
       else store.toggleResultFormat();
@@ -325,15 +313,17 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     id: 'key_m_plus',
     primary: 'M+',
     shift: 'M-',
-    alpha: 'M',
+    alpha: 'm',
     action: (mod) => {
       if (mod === 'SHIFT') store.subtractFromMemory();
       else if (mod === 'ALPHA') store.insertText('M');
       else store.addToMemory();
     }
-  },
+  }
+];
 
-  // --- ROW 6 (NUMPAD 7, 8, 9, DEL, AC) ---
+export const NUMPAD_KEYS: KeyDefinition[] = [
+  // --- ROW 6 (5 keys) ---
   {
     id: 'key_7',
     primary: '7',
@@ -395,7 +385,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     cssClass: 'btn-ac'
   },
 
-  // --- ROW 7 (NUMPAD 4, 5, 6, ×, ÷) ---
+  // --- ROW 7 (5 keys) ---
   {
     id: 'key_4',
     primary: '4',
@@ -427,8 +417,8 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     alpha: 'HELP',
     action: (mod) => {
       if (mod === 'SHIFT') {
-        const formulaModal = document.getElementById('formula-modal');
-        if (formulaModal) formulaModal.classList.remove('hidden');
+        const modeModal = document.getElementById('mode-modal');
+        if (modeModal) modeModal.classList.remove('hidden');
       } else {
         store.insertText('6');
       }
@@ -460,7 +450,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     cssClass: 'btn-operator'
   },
 
-  // --- ROW 8 (NUMPAD 1, 2, 3, +, -) ---
+  // --- ROW 8 (5 keys) ---
   {
     id: 'key_1',
     primary: '1',
@@ -516,7 +506,7 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
     cssClass: 'btn-operator'
   },
 
-  // --- ROW 9 (NUMPAD 0, ., Exp, Ans, =) ---
+  // --- ROW 9 (5 keys) ---
   {
     id: 'key_0',
     primary: '0',
@@ -581,51 +571,62 @@ export const KEY_DEFINITIONS: KeyDefinition[] = [
   }
 ];
 
-export function renderKeypad(container: HTMLElement): void {
-  container.innerHTML = '';
+function createKeyUnit(def: KeyDefinition): HTMLElement {
+  const unit = document.createElement('div');
+  unit.className = 'key-cell';
 
-  for (const def of KEY_DEFINITIONS) {
-    const btn = document.createElement('button');
-    btn.id = def.id;
-    btn.className = `calc-key ${def.cssClass || ''}`;
+  // Sublabel header above button
+  const sublabelBar = document.createElement('div');
+  sublabelBar.className = 'key-sublabels-bar';
 
-    // Sub-labels container
-    const labelsDiv = document.createElement('div');
-    labelsDiv.className = 'key-sublabels';
+  if (def.shift) {
+    const shiftSpan = document.createElement('span');
+    shiftSpan.className = 'sublabel shift-sublabel';
+    shiftSpan.textContent = def.shift;
+    sublabelBar.appendChild(shiftSpan);
+  } else {
+    sublabelBar.appendChild(document.createElement('span'));
+  }
 
-    if (def.shift) {
-      const shiftSpan = document.createElement('span');
-      shiftSpan.className = 'sublabel shift-label';
-      shiftSpan.textContent = def.shiftDisplay || def.shift;
-      labelsDiv.appendChild(shiftSpan);
-    }
+  if (def.alpha) {
+    const alphaSpan = document.createElement('span');
+    alphaSpan.className = 'sublabel alpha-sublabel';
+    alphaSpan.textContent = def.alpha;
+    sublabelBar.appendChild(alphaSpan);
+  }
 
-    if (def.alpha) {
-      const alphaSpan = document.createElement('span');
-      alphaSpan.className = 'sublabel alpha-label';
-      alphaSpan.textContent = def.alphaDisplay || def.alpha;
-      labelsDiv.appendChild(alphaSpan);
-    }
+  unit.appendChild(sublabelBar);
 
-    btn.appendChild(labelsDiv);
+  // Button itself
+  const btn = document.createElement('button');
+  btn.id = def.id;
+  btn.className = `calc-key ${def.cssClass || ''}`;
+  btn.textContent = def.primary;
 
-    // Primary label
-    const mainSpan = document.createElement('span');
-    mainSpan.className = 'key-main-label';
-    mainSpan.textContent = def.primaryDisplay || def.primary;
-    btn.appendChild(mainSpan);
+  // Touch and Click handling
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const isSpecial = def.id === 'key_shift' || def.id === 'key_alpha' || def.id === 'key_equals';
+    sound.playKeyClick(isSpecial);
+    if (isSpecial) Haptics.specialClick();
+    else Haptics.lightClick();
 
-    // Touch & Click handlers
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const isSpecial = def.id === 'key_shift' || def.id === 'key_alpha' || def.id === 'key_equals';
-      sound.playKeyClick(isSpecial);
-      if (isSpecial) Haptics.specialClick();
-      else Haptics.lightClick();
+    def.action(store.modifier);
+  });
 
-      def.action(store.modifier);
-    });
+  unit.appendChild(btn);
+  return unit;
+}
 
-    container.appendChild(btn);
+export function renderKeypad(funcContainer: HTMLElement, numContainer: HTMLElement): void {
+  funcContainer.innerHTML = '';
+  numContainer.innerHTML = '';
+
+  for (const def of FUNCTION_KEYS) {
+    funcContainer.appendChild(createKeyUnit(def));
+  }
+
+  for (const def of NUMPAD_KEYS) {
+    numContainer.appendChild(createKeyUnit(def));
   }
 }
