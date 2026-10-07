@@ -4,6 +4,14 @@ Casio fx-991ES PLUS / CalcES emulator PWA. See `README.md` ("Resume here") for s
 
 ## Session log
 
+### 2026-10-07 - Keyboard `/` makes a stacked fraction
+
+- **Changed:** `src/main.ts` (keyboard `/` calls `store.insertFraction()`); README change log and Resume-here updated.
+- **Why:** user saw a bare `÷` after typing `/` on the live site and expected the stacked fraction.
+- **Files:** `src/main.ts`, `README.md`, `CLAUDE.md`.
+- **Revert:** restore `'/': '÷'` in the `typed` map in `src/main.ts` and delete the `e.key === '/'` branch.
+- **Verified:** `npm test` pass, build OK, browser pane showed stacked 1/2 + 3/4 = 5/4. Commit `79ff153` (earlier work) was pushed; this change committed locally, not pushed.
+
 ### 2026-10-07 - Stacked-fraction input
 
 - **Changed:** added `src/math/templates.ts`; `insertFraction`/DEL handling in `src/state/store.ts`; recursive LCD drawing in `src/display/renderer.ts`; `■/□` key in `src/ui/keypad.ts`; template pre-pass in `src/math/evaluator.ts`; history text in `src/ui/drawers.ts`; styles in `src/style.css`; 7 tests in `test_physical.ts`; README change log updated.

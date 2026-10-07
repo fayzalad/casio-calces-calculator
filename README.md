@@ -4,8 +4,8 @@
 
 **Last updated 2026-10-07 on DESKTOP.** Local `main` matched GitHub (`origin/main`) at the start of this session.
 
-**State:** stacked-fraction input was added on top of a "behave like the physical fx-991ES" pass was done on the calculator engine and input handling (see Change log). It is **uncommitted and NOT pushed**, so the live GitHub Pages site still has the old behaviour. Pushing to `main` auto-deploys via `.github/workflows`.
-**Next step:** user reviews, then `git add -A && git commit && git push` to deploy. Then pick from "Open issues" below (biggest remaining gap: stacked *input* for roots, integrals and sums; fractions are done).
+**State:** stacked-fraction input was added on top of a "behave like the physical fx-991ES" pass was done on the calculator engine and input handling (see Change log). Commit `79ff153` was pushed to `main` (auto-deploys via `.github/workflows`). A follow-up keyboard `/` change is committed locally; check `git status`/`git log origin/main..` for whether it is pushed.
+**Next step:** pick from "Open issues" below (biggest remaining gap: stacked *input* for roots, integrals and sums; fractions are done).
 **Get a working state:** `npm ci`, `npm test` (runs `test_math.ts` and `test_physical.ts`), `npm run dev` (or `npm run build && npx vite preview --port 4173`).
 **Not verified:** on a real iPhone; the non-COMP modes (STAT/MATRIX/etc.) were not touched or re-tested; the Casio-classic skin was not visually re-checked after the display changes.
 
@@ -105,6 +105,10 @@ Architected as a high-performance **Progressive Web App (PWA)** that runs on des
 ---
 
 ## Change log (append-only, newest first)
+
+### 2026-10-07 DESKTOP: keyboard `/` now draws a stacked fraction
+
+Why: user pushed the build, typed `/` and still saw a bare `÷` symbol instead of a stacked fraction. My earlier decision to keep keyboard `/` linear was wrong for this user. Change: `src/main.ts` calls `store.insertFraction()` for `/` (removed from the linear map). The on-screen `÷` key stays linear, like the physical key. Verified in the browser pane: `1 / 2 → + 3 / 4 Enter` shows two stacked fractions and 5/4. Supersedes the "keyboard `/` stays linear" decision in the entry below.
 
 ### 2026-10-07 DESKTOP: stacked-fraction input (natural display)
 

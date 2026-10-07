@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 7. Physical Desktop Keyboard Support
   const typed: Record<string, string> = {
-    '.': '.', '+': '+', '-': '-', '*': '×', '/': '÷', '(': '(', ')': ')', '^': '^',
+    '.': '.', '+': '+', '-': '-', '*': '×', '(': '(', ')': ')', '^': '^',
     ',': ',', '!': '!', '%': '%', 'e': 'e', 'p': 'π', 'x': 'X', 'y': 'Y',
     's': 'sin(', 'c': 'cos(', 't': 'tan(', 'l': 'log(', 'n': 'ln(', 'r': 'sqrt(',
     'a': 'Ans'
@@ -143,6 +143,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     let handled = true;
     if (e.key >= '0' && e.key <= '9') store.insertText(e.key);
+    else if (e.key === '/') store.insertFraction(); // stacked fraction, like the on-screen key
     else if (e.key === 'Enter' || e.key === '=') store.evaluateExpression(true);
     else if (e.key === 'Backspace' || e.key === 'Delete') store.deleteBack();
     else if (e.key === 'Escape') store.clearAll();
