@@ -4,7 +4,7 @@
 
 **Last updated 2026-10-07 on DESKTOP.** Local `main` matched GitHub (`origin/main`) at the start of this session.
 
-**State:** stacked-fraction input was added on top of a "behave like the physical fx-991ES" pass was done on the calculator engine and input handling (see Change log). Commit `79ff153` was pushed to `main` (auto-deploys via `.github/workflows`). A follow-up keyboard `/` change is committed locally; check `git status`/`git log origin/main..` for whether it is pushed.
+**State:** stacked-fraction input was added on top of a "behave like the physical fx-991ES" pass was done on the calculator engine and input handling (see Change log). Commit `79ff153` was pushed to `main` (auto-deploys via `.github/workflows`). Follow-up commit `01a0f84` (keyboard `/` draws a stacked fraction) was also pushed.
 **Next step:** pick from "Open issues" below (biggest remaining gap: stacked *input* for roots, integrals and sums; fractions are done).
 **Get a working state:** `npm ci`, `npm test` (runs `test_math.ts` and `test_physical.ts`), `npm run dev` (or `npm run build && npx vite preview --port 4173`).
 **Not verified:** on a real iPhone; the non-COMP modes (STAT/MATRIX/etc.) were not touched or re-tested; the Casio-classic skin was not visually re-checked after the display changes.

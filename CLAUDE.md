@@ -10,7 +10,7 @@ Casio fx-991ES PLUS / CalcES emulator PWA. See `README.md` ("Resume here") for s
 - **Why:** user saw a bare `÷` after typing `/` on the live site and expected the stacked fraction.
 - **Files:** `src/main.ts`, `README.md`, `CLAUDE.md`.
 - **Revert:** restore `'/': '÷'` in the `typed` map in `src/main.ts` and delete the `e.key === '/'` branch.
-- **Verified:** `npm test` pass, build OK, browser pane showed stacked 1/2 + 3/4 = 5/4. Commit `79ff153` (earlier work) was pushed; this change committed locally, not pushed.
+- **Verified:** `npm test` pass, build OK, browser pane showed stacked 1/2 + 3/4 = 5/4. Commit `79ff153` (earlier work) was pushed; this change committed as `01a0f84` and pushed to origin/main.
 
 ### 2026-10-07 - Stacked-fraction input
 
