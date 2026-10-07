@@ -4,6 +4,14 @@ Casio fx-991ES PLUS / CalcES emulator PWA. See `README.md` ("Resume here") for s
 
 ## Session log
 
+### 2026-10-07 - Branch-based deploy and service-worker fix
+
+- **Changed:** added `scripts/deploy.mjs` and `npm run deploy`; `public/sw.js` (cache v3, network-first pages); `.github/workflows` deploy file now `workflow_dispatch` only; force-pushed a fresh `gh-pages` branch (overwrote old `69ba4a1`); confirmed Pages source = gh-pages `/`; README updated.
+- **Why:** the Actions deploy was refused by GitHub ("account locked due to a billing issue") so the live site never updated.
+- **Files:** `scripts/deploy.mjs`, `package.json`, `public/sw.js`, `.github/workflows/*.yml`, `README.md`, `CLAUDE.md`; remote `gh-pages` branch.
+- **Revert:** workflow: restore `push: branches: ["main"]` under `on:`. Old gh-pages: `git push -f origin 69ba4a1:gh-pages`. SW: set cache name back to v2 and restore the cache-first fetch handler.
+- **Verified:** Pages API `built`; live bundle name matches local; live sw.js has cache-v3.
+
 ### 2026-10-07 - Keyboard `/` makes a stacked fraction
 
 - **Changed:** `src/main.ts` (keyboard `/` calls `store.insertFraction()`); README change log and Resume-here updated.

@@ -2,12 +2,13 @@
 
 ## Resume here  (rewritten each session)
 
-**Last updated 2026-10-07 on DESKTOP.** Local `main` matched GitHub (`origin/main`) at the start of this session.
+**Last updated 2026-10-07 on DESKTOP.**
 
-**State:** stacked-fraction input was added on top of a "behave like the physical fx-991ES" pass was done on the calculator engine and input handling (see Change log). Commit `79ff153` was pushed to `main` (auto-deploys via `.github/workflows`). Follow-up commit `01a0f84` (keyboard `/` draws a stacked fraction) was also pushed.
-**Next step:** pick from "Open issues" below (biggest remaining gap: stacked *input* for roots, integrals and sums; fractions are done).
-**Get a working state:** `npm ci`, `npm test` (runs `test_math.ts` and `test_physical.ts`), `npm run dev` (or `npm run build && npx vite preview --port 4173`).
-**Not verified:** on a real iPhone; the non-COMP modes (STAT/MATRIX/etc.) were not touched or re-tested; the Casio-classic skin was not visually re-checked after the display changes.
+**State:** everything is committed and live: physical-calculator accuracy pass, stacked-fraction input (on-screen `■/□` and keyboard `/`), and a new deploy path. The live site is https://fayzalad.github.io/casio-calces-calculator/ .
+**How to deploy now:** `npm run deploy` (builds, then force-pushes `dist/` as a one-commit `gh-pages` branch). Repo Settings > Pages is already "Deploy from a branch: gh-pages /". Do NOT rely on pushing to `main`: the GitHub Actions workflow was refused ("account locked due to a billing issue") and is now manual-only.
+**Next step:** pick from "Open issues" (biggest gap: stacked input for roots, integrals, sums, exponents; mixed numbers). The user may also want to clear the GitHub billing flag (Settings > Billing; open a Support ticket if nothing is unpaid).
+**Get a working state:** `npm ci`, `npm test`, `npm run dev`.
+**Not verified:** on a real iPhone; non-COMP modes; the Casio-classic skin after the display changes.
 
 ---
 
@@ -106,6 +107,20 @@ Architected as a high-performance **Progressive Web App (PWA)** that runs on des
 
 ## Change log (append-only, newest first)
 
+### 2026-10-07 DESKTOP: branch-based deploy, service-worker fix, Actions workflow made manual
+
+Why: after pushing, the live site still showed `÷`. Cause: every run of the `Deploy to GitHub Pages` Action failed instantly with "The job was not started because your account is locked due to a billing issue", although the billing page showed GitHub Free, $0 due, 12 of 2,000 free minutes used. (Other repos' "pages build and deployment" runs, which are GitHub's built-in branch builds, kept succeeding.) Pages source was already "Deploy from a branch: gh-pages /", so only the branch needed refreshing.
+
+What changed:
+- `scripts/deploy.mjs` + `"deploy"` script in `package.json`: builds and force-pushes `dist/` (plus `.nojekyll`) to `gh-pages` as one commit. First run overwrote an older `gh-pages` branch (`69ba4a1`, the previous deploy output); that was intended.
+- Ran the Pages API to confirm/set source = gh-pages `/` (it already was; build_type legacy).
+- `public/sw.js`: cache name `v2` -> `v3`; page loads now go network-first (fall back to saved copy offline) so installed copies pick up new deploys. Hashed assets still cache-first.
+- `.github/workflows/*.yml`: trigger changed from push-to-main to `workflow_dispatch` only, so pushes stop producing failure emails. Restore the push trigger and set Pages source to "GitHub Actions" only if the billing lock is cleared.
+
+Verified: `gh api .../pages` status `built`; the live HTML references `assets/index-BL7YoDyC.js`, identical to the local build; live `sw.js` contains `cache-v3`. Not verified: that an already-installed phone copy updates itself.
+
+Failures: the Actions lock (above) is unresolved on GitHub's side; I could not see a cause on the billing page. Dead end: assuming it was a real unpaid charge.
+
 ### 2026-10-07 DESKTOP: keyboard `/` now draws a stacked fraction
 
 Why: user pushed the build, typed `/` and still saw a bare `÷` symbol instead of a stacked fraction. My earlier decision to keep keyboard `/` linear was wrong for this user. Change: `src/main.ts` calls `store.insertFraction()` for `/` (removed from the linear map). The on-screen `÷` key stays linear, like the physical key. Verified in the browser pane: `1 / 2 → + 3 / 4 Enter` shows two stacked fractions and 5/4. Supersedes the "keyboard `/` stays linear" decision in the entry below.
@@ -170,7 +185,8 @@ Verified: `npx tsc --noEmit` clean; `npm test` all pass; `npm run build` OK; in 
 
 ## Gotchas
 
-- `dist/` is git-ignored; the GitHub Action rebuilds it on every push to `main`.
+- `dist/` is git-ignored. Pushing to `main` does NOT deploy any more; run `npm run deploy`.
+- If the live site looks stale, the service worker may be serving an old copy (hard-refresh / clear site data once; v3 fixes this for later updates).
 - The service worker (`public/sw.js`) caches the old build; hard-refresh or clear site data when testing.
 - The exponent key inserts `ᴇ` (U+1D07), not the letter `e`; lowercase `e` is Euler's number.
 

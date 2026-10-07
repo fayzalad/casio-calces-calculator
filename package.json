@@ -7,6 +7,7 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview --host",
+    "deploy": "node scripts/deploy.mjs",
     "test": "vite-node test_math.ts && vite-node test_physical.ts"
   },
   "devDependencies": {

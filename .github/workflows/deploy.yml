@@ -1,8 +1,9 @@
 name: Deploy to GitHub Pages
 
+# Manual only. Normal deploys use `npm run deploy` (gh-pages branch) because GitHub Actions
+# was refusing to start on this account ("locked due to a billing issue"). If Actions is
+# fixed and Pages source is switched back to "GitHub Actions", restore the push trigger.
 on:
-  push:
-    branches: ["main"]
   workflow_dispatch:
 
 permissions:
