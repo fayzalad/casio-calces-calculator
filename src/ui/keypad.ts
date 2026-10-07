@@ -43,8 +43,10 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     primary: 'MODE',
     shift: 'SETUP',
     action: (mod) => {
-      const modeModal = document.getElementById('mode-modal');
-      if (modeModal) modeModal.classList.toggle('hidden');
+      const id = mod === 'SHIFT' ? 'settings-modal' : 'mode-modal';
+      document.getElementById(id)?.classList.toggle('hidden');
+      store.modifier = 'NORMAL';
+      store.notify();
     }
   },
   {
@@ -79,25 +81,13 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
   {
     id: 'key_up',
     primary: '▲',
-    action: () => {
-      if (store.history.length > 0) {
-        store.expression = store.history[0].expressionRaw;
-        store.cursorPos = store.expression.length;
-        store.notify();
-      }
-    },
+    action: () => store.historyUp(),
     cssClass: 'btn-nav'
   },
   {
     id: 'key_down',
     primary: '▼',
-    action: () => {
-      if (store.history.length > 1) {
-        store.expression = store.history[1].expressionRaw;
-        store.cursorPos = store.expression.length;
-        store.notify();
-      }
-    },
+    action: () => store.historyDown(),
     cssClass: 'btn-nav'
   },
   {
@@ -117,7 +107,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('sum(');
       else if (mod === 'ALPHA') store.insertText('prod(');
-      else store.insertText('log(');
+      else store.insertText('logab(');
     }
   },
 
@@ -128,8 +118,8 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     shift: 'a b/c',
     alpha: '÷R',
     action: (mod) => {
-      if (mod === 'ALPHA') store.insertText(' mod ');
-      else store.insertText('/');
+      if (mod === 'ALPHA') store.insertText('mod');
+      else store.insertFraction();
     }
   },
   {
@@ -139,7 +129,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     alpha: 'mod',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('cbrt(');
-      else if (mod === 'ALPHA') store.insertText(' mod ');
+      else if (mod === 'ALPHA') store.insertText('mod');
       else store.insertText('sqrt(');
     }
   },
@@ -157,7 +147,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     primary: 'x^□',
     shift: '□√□',
     action: (mod) => {
-      if (mod === 'SHIFT') store.insertText('^(1/');
+      if (mod === 'SHIFT') store.insertText('root(');
       else store.insertText('^');
     }
   },
@@ -189,7 +179,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('∠');
       else if (mod === 'ALPHA') store.insertText('A');
-      else store.insertText('-');
+      else store.insertText('-', { startFresh: true });
     }
   },
   {
@@ -211,7 +201,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('abs(');
       else if (mod === 'ALPHA') store.insertText('C');
-      else store.insertText('sinh(');
+      else store.toggleHyp();
     }
   },
   {
@@ -220,9 +210,8 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     shift: 'Sin⁻¹',
     alpha: 'd',
     action: (mod) => {
-      if (mod === 'SHIFT') store.insertText('asin(');
-      else if (mod === 'ALPHA') store.insertText('D');
-      else store.insertText('sin(');
+      if (mod === 'ALPHA') store.insertText('D');
+      else store.insertTrig('sin', mod === 'SHIFT');
     }
   },
   {
@@ -231,9 +220,8 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     shift: 'Cos⁻¹',
     alpha: 'e',
     action: (mod) => {
-      if (mod === 'SHIFT') store.insertText('acos(');
-      else if (mod === 'ALPHA') store.insertText('E');
-      else store.insertText('cos(');
+      if (mod === 'ALPHA') store.insertText('E');
+      else store.insertTrig('cos', mod === 'SHIFT');
     }
   },
   {
@@ -242,9 +230,8 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     shift: 'Tan⁻¹',
     alpha: 'f',
     action: (mod) => {
-      if (mod === 'SHIFT') store.insertText('atan(');
-      else if (mod === 'ALPHA') store.insertText('F');
-      else store.insertText('tan(');
+      if (mod === 'ALPHA') store.insertText('F');
+      else store.insertTrig('tan', mod === 'SHIFT');
     }
   },
 
@@ -274,7 +261,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('i');
       else if (mod === 'ALPHA') store.insertText('cot(');
-      else store.insertText('e3');
+      else store.toEngineering();
     }
   },
   {
@@ -431,7 +418,7 @@ export const NUMPAD_KEYS: KeyDefinition[] = [
     shift: 'nPr',
     alpha: 'GCD',
     action: (mod) => {
-      if (mod === 'SHIFT') store.insertText('nPr(');
+      if (mod === 'SHIFT') store.insertText('nPr');
       else if (mod === 'ALPHA') store.insertText('gcd(');
       else store.insertText('×');
     },
@@ -443,7 +430,7 @@ export const NUMPAD_KEYS: KeyDefinition[] = [
     shift: 'nCr',
     alpha: 'LCM',
     action: (mod) => {
-      if (mod === 'SHIFT') store.insertText('nCr(');
+      if (mod === 'SHIFT') store.insertText('nCr');
       else if (mod === 'ALPHA') store.insertText('lcm(');
       else store.insertText('÷');
     },
@@ -530,7 +517,7 @@ export const NUMPAD_KEYS: KeyDefinition[] = [
     alpha: 'RanInt',
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText(Math.random().toFixed(3));
-      else if (mod === 'ALPHA') store.insertText(`Math.floor(Math.random()*10)`);
+      else if (mod === 'ALPHA') store.insertText('ranint(');
       else store.insertText('.');
     },
     cssClass: 'btn-num'
@@ -543,7 +530,7 @@ export const NUMPAD_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'SHIFT') store.insertText('π');
       else if (mod === 'ALPHA') store.insertText('e');
-      else store.insertText(' × 10^');
+      else store.insertText('ᴇ');
     }
   },
   {

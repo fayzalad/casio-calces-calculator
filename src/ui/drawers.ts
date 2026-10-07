@@ -1,7 +1,8 @@
 import { store } from '../state/store';
 import { CASIO_CONSTANTS } from '../math/constants';
 import { CASIO_CONVERSIONS } from '../math/conversions';
-import { CalculatorMode, AngleUnit, UITheme } from '../types/calculator';
+import { templatesToText } from '../math/templates';
+import { CalculatorMode, AngleUnit, UITheme, DisplayFormat } from '../types/calculator';
 
 export function setupDrawersAndModals(): void {
   setupBackdropClose();
@@ -167,7 +168,8 @@ function setupConstantsModal(): void {
     list.querySelectorAll('.const-item').forEach(b => {
       b.addEventListener('click', () => {
         const val = b.getAttribute('data-val')!;
-        store.insertText(val);
+        // constants carry exponents like 6.626e-34; the calculator's exponent key is ᴇ
+        store.insertText(val.replace('e', 'ᴇ'));
         modal.classList.add('hidden');
       });
     });
@@ -213,11 +215,15 @@ function setupConversionsModal(): void {
         const code = b.getAttribute('data-code')!;
         const conv = CASIO_CONVERSIONS[code];
         if (conv) {
-          const currentVal = parseFloat(store.resultDecimal || store.expression) || 1;
+          const currentVal = store.justEvaluated ? store.variables.Ans : parseFloat(store.expression) || 1;
           const converted = conv.convert(currentVal);
+          store.expression = `${currentVal}`;
+          store.cursorPos = store.expression.length;
           store.resultExact = converted.toString();
           store.resultDecimal = converted.toString();
-          store.expression = `${currentVal} ${conv.label} =`;
+          store.variables.PreAns = store.variables.Ans;
+          store.variables.Ans = converted;
+          store.justEvaluated = true;
           store.notify();
         }
         modal.classList.add('hidden');
@@ -250,7 +256,7 @@ function setupHistoryDrawer(): void {
       .map(
         h => `
         <div class="history-card" data-expr="${h.expressionRaw}" data-res="${h.resultExact}">
-          <div class="hist-expr">${h.expressionDisplay}</div>
+          <div class="hist-expr">${templatesToText(h.expressionDisplay)}</div>
           <div class="hist-res">= ${h.resultExact}</div>
         </div>
       `
@@ -302,6 +308,26 @@ function setupSettingsModal(): void {
     angleSelect.addEventListener('change', () => {
       store.setAngleUnit(angleSelect.value as AngleUnit);
     });
+  }
+
+  const formatSelect = modal.querySelector<HTMLSelectElement>('#setting-format');
+  const digitsSelect = modal.querySelector<HTMLSelectElement>('#setting-digits');
+  const digitsRow = modal.querySelector<HTMLElement>('#setting-digits-row');
+  const applyDisplay = () => {
+    if (!formatSelect || !digitsSelect) return;
+    const fmt = formatSelect.value as DisplayFormat;
+    if (digitsRow) digitsRow.style.display = fmt === 'FIX' || fmt === 'SCI' ? '' : 'none';
+    store.setDisplayFormat(fmt, parseInt(digitsSelect.value, 10));
+  };
+  if (formatSelect && digitsSelect) {
+    formatSelect.value = store.settings.displayFormat;
+    digitsSelect.value = String(store.settings.fixDigits);
+    if (digitsRow) {
+      digitsRow.style.display =
+        store.settings.displayFormat === 'FIX' || store.settings.displayFormat === 'SCI' ? '' : 'none';
+    }
+    formatSelect.addEventListener('change', applyDisplay);
+    digitsSelect.addEventListener('change', applyDisplay);
   }
 
   if (soundToggle) {

@@ -126,70 +126,39 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
   // 7. Physical Desktop Keyboard Support
+  const typed: Record<string, string> = {
+    '.': '.', '+': '+', '-': '-', '*': '×', '/': '÷', '(': '(', ')': ')', '^': '^',
+    ',': ',', '!': '!', '%': '%', 'e': 'e', 'p': 'π', 'x': 'X', 'y': 'Y',
+    's': 'sin(', 'c': 'cos(', 't': 'tan(', 'l': 'log(', 'n': 'ln(', 'r': 'sqrt(',
+    'a': 'Ans'
+  };
   window.addEventListener('keydown', (e) => {
-    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) {
       return;
     }
+    // Leave browser shortcuts (Ctrl+C, Ctrl+R, F5, Tab...) alone
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    // Don't type into the calculator while a pop-up is open
+    if (document.querySelector('.modal-overlay:not(.hidden), .drawer-overlay:not(.hidden)')) return;
 
-    sound.playKeyClick();
-    Haptics.lightClick();
+    let handled = true;
+    if (e.key >= '0' && e.key <= '9') store.insertText(e.key);
+    else if (e.key === 'Enter' || e.key === '=') store.evaluateExpression(true);
+    else if (e.key === 'Backspace' || e.key === 'Delete') store.deleteBack();
+    else if (e.key === 'Escape') store.clearAll();
+    else if (e.key === 'ArrowLeft') store.moveCursorLeft();
+    else if (e.key === 'ArrowRight') store.moveCursorRight();
+    else if (e.key === 'ArrowUp') store.historyUp();
+    else if (e.key === 'ArrowDown') store.historyDown();
+    else if (e.key === 'E') store.insertText('ᴇ');
+    else if (typed[e.key] !== undefined) store.insertText(typed[e.key]);
+    else if (typed[e.key.toLowerCase()] !== undefined && e.key.length === 1 && e.key !== e.key.toLowerCase()) {
+      store.insertText(typed[e.key.toLowerCase()]);
+    } else handled = false;
 
-    if (e.key >= '0' && e.key <= '9') {
-      store.insertText(e.key);
-      e.preventDefault();
-    } else if (e.key === '.') {
-      store.insertText('.');
-      e.preventDefault();
-    } else if (e.key === '+') {
-      store.insertText('+');
-      e.preventDefault();
-    } else if (e.key === '-') {
-      store.insertText('-');
-      e.preventDefault();
-    } else if (e.key === '*') {
-      store.insertText('×');
-      e.preventDefault();
-    } else if (e.key === '/') {
-      store.insertText('÷');
-      e.preventDefault();
-    } else if (e.key === '(' || e.key === ')') {
-      store.insertText(e.key);
-      e.preventDefault();
-    } else if (e.key === '^') {
-      store.insertText('^');
-      e.preventDefault();
-    } else if (e.key === 'Enter' || e.key === '=') {
-      store.evaluateExpression(true);
-      e.preventDefault();
-    } else if (e.key === 'Backspace') {
-      store.deleteBack();
-      e.preventDefault();
-    } else if (e.key === 'Escape') {
-      store.clearAll();
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft') {
-      store.moveCursorLeft();
-      e.preventDefault();
-    } else if (e.key === 'ArrowRight') {
-      store.moveCursorRight();
-      e.preventDefault();
-    } else if (e.key === 's') {
-      store.insertText('sin(');
-      e.preventDefault();
-    } else if (e.key === 'c') {
-      store.insertText('cos(');
-      e.preventDefault();
-    } else if (e.key === 't') {
-      store.insertText('tan(');
-      e.preventDefault();
-    } else if (e.key === 'l') {
-      store.insertText('log(');
-      e.preventDefault();
-    } else if (e.key === 'n') {
-      store.insertText('ln(');
-      e.preventDefault();
-    } else if (e.key.toLowerCase() === 'x') {
-      store.insertText('X');
+    if (handled) {
+      sound.playKeyClick();
+      Haptics.lightClick();
       e.preventDefault();
     }
   });

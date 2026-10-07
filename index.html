@@ -209,6 +209,24 @@
             </select>
           </div>
           <div class="setting-row">
+            <label for="setting-format">Number Format (SETUP)</label>
+            <select id="setting-format">
+              <option value="NORM1">Norm 1 (default)</option>
+              <option value="NORM2">Norm 2</option>
+              <option value="FIX">Fix (fixed decimals)</option>
+              <option value="SCI">Sci (significant digits)</option>
+              <option value="ENG">Eng (powers of 3)</option>
+            </select>
+          </div>
+          <div class="setting-row" id="setting-digits-row">
+            <label for="setting-digits">Digits (Fix / Sci)</label>
+            <select id="setting-digits">
+              <option>0</option><option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option><option>7</option>
+              <option>8</option><option>9</option>
+            </select>
+          </div>
+          <div class="setting-row">
             <label for="setting-sound">Key Click Sound</label>
             <input type="checkbox" id="setting-sound" checked>
           </div>

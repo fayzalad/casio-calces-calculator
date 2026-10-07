@@ -812,3 +812,40 @@ body {
   color: #fff;
   border-radius: 6px;
 }
+
+.lcd-result sup.exp, #lcd-result sup.exp { font-size: 0.55em; vertical-align: super; line-height: 0; margin-left: 1px; }
+
+/* Stacked fractions typed into the expression (natural display) */
+.tfrac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 3px;
+  font-size: 0.85em;
+  line-height: 1.15;
+}
+.tfrac .tnum {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 3px 1px;
+  border-bottom: 1.5px solid currentColor;
+  min-width: 100%;
+  justify-content: center;
+}
+.tfrac .tden {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 3px 0;
+  min-width: 100%;
+  justify-content: center;
+}
+.tbox {
+  display: inline-block;
+  width: 0.7em;
+  height: 0.9em;
+  border: 1px dashed currentColor;
+  opacity: 0.55;
+}
+.tfrac .cursor { height: 1em; }
+.lcd-expression { min-height: 44px; }

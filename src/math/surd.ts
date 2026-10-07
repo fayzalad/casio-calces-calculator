@@ -114,11 +114,11 @@ export class Surd {
     if (this.radicand === 1) {
       numStr = `${this.coeff}`;
     } else if (this.coeff === 1) {
-      numStr = `√(${this.radicand})`;
+      numStr = `√${this.radicand}`;
     } else if (this.coeff === -1) {
-      numStr = `-√(${this.radicand})`;
+      numStr = `-√${this.radicand}`;
     } else {
-      numStr = `${this.coeff}√(${this.radicand})`;
+      numStr = `${this.coeff}√${this.radicand}`;
     }
 
     if (this.denom === 1) return numStr;

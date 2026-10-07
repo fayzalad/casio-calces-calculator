@@ -7,7 +7,7 @@
     "dev": "vite --host",
     "build": "tsc && vite build",
     "preview": "vite preview --host",
-    "test": "vite-node test_math.ts"
+    "test": "vite-node test_math.ts && vite-node test_physical.ts"
   },
   "devDependencies": {
     "typescript": "^5.7.2",
