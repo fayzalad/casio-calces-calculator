@@ -1,5 +1,13 @@
 # Session log
 
+### 2026-11-03 — Raised exponents after x^□
+
+- **Did:** the LCD now draws whatever follows `^` (number, Ans, variable, π, or a bracketed group) as a raised superscript, with a raised empty box right after pressing x^□; replaced the old `^2`/`^3` → ²/³ text swap so all powers look the same.
+- **Why:** user wanted x^□ to look like x² (raised) instead of a literal `^`.
+- **Files:** `src/display/renderer.ts` (`exponent()` in `drawExpression`), `src/style.css` (`sup.pow`).
+- **Undo:** `git revert` the commit after this entry.
+- **Checked:** `tsc` + tests pass; viewed `5^(3+1)+2^□` raised in the browser. Known difference from the real calculator: the cursor sits after the raised exponent, and anything typed next goes on the baseline (real one stays in the exponent until →).
+
 ### 2026-11-03 — Complex maths, distributions, BASE-N, graph, desktop side panel
 
 - **Did:** CMPLX: complex-aware exp/ln/log/√/trig/powers, `conjg arg re im`, float-dust cleanup, S⇔D flips a+bi / r∠θ. DISTR: replaced 1e-7 erf with ~1e-15 erf/erfc and fixed invNormal (0.975 gave 0.76). BASE-N: negatives show 32-bit two's complement, FFFFFFFF parses as -1. GRAPH: canvas now sizes itself, draws on open, theme colours, nice grid + labels, asymptote gaps, Done button works. Desktop (>=1100x700): history + memory side panel (`src/ui/sidebar.ts`).

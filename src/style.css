@@ -922,3 +922,9 @@ body {
   .side-var { display: flex; justify-content: space-between; gap: 6px; padding: 6px 8px; border-radius: 6px; background: rgba(128, 128, 128, 0.12); font-family: var(--font-family-lcd); font-size: 13px; overflow: hidden; }
   .side-empty, .side-keys { font-size: 12px; opacity: 0.65; line-height: 1.45; }
 }
+
+/* Raised exponent after x^□, same look as x² */
+.lcd-expression sup.pow { font-size: 0.62em; vertical-align: 0.7em; line-height: 0; margin-left: 1px; display: inline-flex; align-items: center; }
+.lcd-expression sup.pow .tbox { width: 0.55em; height: 0.7em; border: 1px solid currentColor; display: inline-block; opacity: 0.8; }
+/* The LCD row is a centred flex line, so raise the exponent with an offset rather than vertical-align */
+.lcd-expression sup.pow { position: relative; top: -0.8em; vertical-align: baseline; }
