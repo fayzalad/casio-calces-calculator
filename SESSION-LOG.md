@@ -1,5 +1,13 @@
 # Session log
 
+### 2026-11-03 — Committed and deployed today's work
+
+- **Did:** committed `6feceb0` on main, pushed to origin/main, `npm run deploy` force-pushed gh-pages (`e98a22d`).
+- **Why:** user approved commit and deploy.
+- **Files:** git history; remote `gh-pages`.
+- **Undo:** `git revert 6feceb0` then `npm run deploy`.
+- **Checked:** Pages build status `built`; live HTML references `assets/index-B5LueJKE.js`, same as local build. Not verified on an installed phone copy.
+
 ### 2026-11-03 — Log/power/inverse regression, TABLE `2X` fix, README resume
 
 - **Did:** added `logarithmicRegression`, `powerRegression`, `inverseRegression` to `src/math/statistics.ts` and the STAT panel; fixed X substitution in TABLE/EQN (`2X` was read as 0); rewrote README "Resume here".

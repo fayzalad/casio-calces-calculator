@@ -4,8 +4,8 @@
 
 **Last updated 2026-11-03 on DESKTOP. Last checked: 2026-11-03.**
 
-**State:** live site is still the 2026-10-07 build. Since then (UNCOMMITTED, not deployed): evaluator fixes (`√2×√8`, odd roots of negatives, COMP gives Math ERROR for imaginary results), DMS input, Pol/Rec two answers, `r∠θ` in CMPLX, CalcES colours matched to the app screenshot, desktop media query, and form screens for STAT / BASE-N / EQN / MATRIX / TABLE / VECTOR / DISTR (`src/ui/modes.ts`; these modes previously did nothing).
-**Next step:** `npm test`, review `git diff`, commit, `npm run deploy` (never push-to-main: Actions is manual-only). Then: look at desktop width (1440) and the new panels visually; stacked input for roots/integrals/sums/exponents; mixed numbers.
+**State:** committed (`6feceb0`) and live as of 2026-11-03: evaluator fixes (`√2×√8`, odd roots of negatives, COMP gives Math ERROR for imaginary results), DMS input, Pol/Rec two answers, `r∠θ` in CMPLX, CalcES colours matched to the app screenshot, desktop media query, and form screens for STAT / BASE-N / EQN / MATRIX / TABLE / VECTOR / DISTR (`src/ui/modes.ts`; these modes previously did nothing).
+**Next step:** (deploy with `npm run deploy`; Actions is manual-only.) Look at desktop width (1440) and the new panels visually; stacked input for roots/integrals/sums/exponents; mixed numbers.
 **Get a working state:** `npm ci`, `npm test`, `npm run dev`.
 **Not verified:** real iPhone; desktop layout; panels visually other than STAT; CMPLX and GRAPH modes.
 **Gotcha:** mode panels are forms, not the real calculator's spreadsheet grid.
