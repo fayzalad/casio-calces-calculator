@@ -11,33 +11,33 @@
    CALCES DARK (OLED) THEME (Default)
    --------------------------------------------------------- */
 [data-theme="calces-dark"] {
-  --bg-app: #0c0e0f;
-  --bg-chassis: #0c0e0f;
+  --bg-app: #2b2b2b;
+  --bg-chassis: #2b2b2b;
   --border-chassis: #1e2226;
 
-  --bg-lcd: #070809;
-  --border-lcd: #1e2225;
+  --bg-lcd: #1c1c1c;
+  --border-lcd: #4a4a4a;
   --color-lcd-text: #ffffff;
   --color-lcd-flag-active: #4caf50;
   --color-lcd-flag-inactive: #252a2f;
   --color-lcd-cursor: #00e676;
 
-  --bg-key-default: #22262a;
-  --border-key: #2f353b;
+  --bg-key-default: #555555;
+  --border-key: #3a3a3a;
   --color-key-text: #ffffff;
 
-  --bg-key-shift: #f5b300;
+  --bg-key-shift: #fbc02d;
   --color-key-shift: #000000;
 
-  --bg-key-alpha: #388e3c;
+  --bg-key-alpha: #4a8f2a;
   --color-key-alpha: #ffffff;
 
-  --bg-key-del: #2e7d32;
-  --bg-key-ac: #2e7d32;
+  --bg-key-del: #4a8f2a;
+  --bg-key-ac: #4a8f2a;
   --color-key-del-ac: #ffffff;
 
-  --color-sublabel-shift: #f5b300;
-  --color-sublabel-alpha: #4caf50;
+  --color-sublabel-shift: #fbc02d;
+  --color-sublabel-alpha: #6fdc2c;
 
   --casio-header-display: none;
   --calces-toolbar-display: flex;
@@ -417,9 +417,9 @@ body {
   display: flex;
   justify-content: space-between;
   padding: 0 1px 1px 1px;
-  height: 11px;
-  font-size: 7.5px;
-  font-weight: 800;
+  height: 13px;
+  font-size: 9px;
+  font-weight: 700;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -443,7 +443,7 @@ body {
   height: 100%;
   min-height: 0;
   border: 1px solid var(--border-key);
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: var(--bg-key-default);
   color: var(--color-key-text);
   font-size: 13.5px;
@@ -482,7 +482,16 @@ body {
 }
 
 .btn-nav {
-  background-color: #1a1e22 !important;
+  background-color: #555 !important;
+}
+
+/* CalcES: number/operator keys are near-black, function keys mid-grey (as in the app) */
+[data-theme="calces-dark"] .btn-num,
+[data-theme="calces-dark"] .btn-operator,
+[data-theme="calces-dark"] .btn-equals,
+[data-theme="calces-dark"] .numpad-grid .calc-key:not(.btn-del):not(.btn-ac) {
+  background-color: #222 !important;
+  border-color: #111 !important;
 }
 
 .btn-num {
@@ -849,3 +858,36 @@ body {
 }
 .tfrac .cursor { height: 1em; }
 .lcd-expression { min-height: 44px; }
+
+/* Desktop: use the extra room (wider chassis, bigger LCD and labels) instead of a thin column */
+@media (min-width: 900px) and (min-height: 700px) {
+  .calculator-app { max-width: 640px; }
+  .lcd-screen { height: 150px; padding: 8px 14px; }
+  .lcd-expression { font-size: 26px; }
+  .lcd-header-line { font-size: 12px; }
+  .key-sublabels-bar { height: 17px; font-size: 12px; }
+  .calc-key { font-size: 17px; }
+  .btn-num { font-size: 23px !important; }
+}
+
+[data-theme="casio-classic"] .theme-tab-btn.active { color: #ffffff; }
+
+/* Mode screens (STAT, BASE-N, EQN, MATRIX, TABLE, VECTOR, DISTR) */
+.mode-card { max-width: 430px; }
+.mode-fields { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 4px 2px; }
+.mode-field { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #9ca3af; }
+.mode-field input, .mode-field select, .mode-field textarea {
+  width: 100%; padding: 8px 10px; background: #1c2024; border: 1px solid #30373e; border-radius: 6px;
+  color: #fff; font: 15px var(--font-family-lcd); user-select: text; resize: vertical;
+}
+.mode-result {
+  margin: 4px 0 0; padding: 10px 12px; min-height: 48px; background: var(--bg-lcd); color: var(--color-lcd-text);
+  border: 1.5px solid var(--border-lcd); border-radius: 7px; font: 16px/1.5 var(--font-family-lcd);
+  white-space: pre-wrap; tab-size: 6; user-select: text;
+}
+.mode-result.error { color: #ff6b6b; }
+[data-theme="casio-classic"] .mode-field { color: #4b5563; }
+[data-theme="casio-classic"] .mode-field input,
+[data-theme="casio-classic"] .mode-field select,
+[data-theme="casio-classic"] .mode-field textarea { background: #fff; color: #1a1e17; border-color: #cbd1db; }
+@media (min-width: 900px) { .mode-card { max-width: 560px; } .mode-field { font-size: 14px; } }

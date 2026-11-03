@@ -43,6 +43,7 @@ const INFIX: Record<string, { prec: number; right?: boolean }> = {
   imul: { prec: 3 },
   nPr: { prec: 3 },
   nCr: { prec: 3 },
+  '∠': { prec: 3 },
   '^': { prec: 5, right: true }
 };
 const NEG_PREC = 4; // -2^2 = -4, but -2*3 = (-2)*3
@@ -53,6 +54,14 @@ const CALCULUS = ['integrate', 'diff', 'sum', 'prod', 'limit'];
 export class Evaluator {
   private static displayFormat: DisplayFormat = 'NORM1';
   private static displayDigits = 2;
+  /** Second answer of Pol( / Rec( (θ or y); the real calculator shows both and stores them in X and Y. */
+  static pair: [number, number] | null = null;
+  private static complexMode = false;
+
+  /** Only CMPLX mode may return imaginary answers; COMP gives Math ERROR like the real calculator. */
+  static setComplexMode(on: boolean): void {
+    Evaluator.complexMode = on;
+  }
 
   /** Tell the number formatter which display mode the user picked in SETUP (NORM/FIX/SCI/ENG). */
   static setDisplay(format: DisplayFormat, digits: number): void {
@@ -68,6 +77,7 @@ export class Evaluator {
     variables: VariableStore,
     angleUnit: AngleUnit = 'DEG'
   ): EvaluationResult {
+    Evaluator.pair = null;
     const { value, approx } = Evaluator.evalValue(expr, variables, angleUnit);
 
     if (value instanceof Complex) {
@@ -90,6 +100,8 @@ export class Evaluator {
     if (wantsDecimal) {
       return { exact: decimal, decimal, numericValue: num };
     }
+
+    if (Math.abs(num) >= 1e10) return { exact: decimal, decimal, numericValue: num };
 
     let exact: string | null = Surd.tryRecognizeExact(num);
     if (exact === null) {
@@ -146,12 +158,16 @@ export class Evaluator {
   ): { value: Value; approx: boolean } {
     let approx = false;
     let s = templatesToInfix(expr)
+      // 1°30'15" -> degrees + minutes/60 + seconds/3600 (the ° key's follow-ups)
+      .replace(/(\d+\.?\d*)°(\d+\.?\d*)['′](?:(\d+\.?\d*)(?:''|"|″))?/g,
+        (_m, d, mi, se) => `(${d}+${mi}/60${se ? `+${se}/3600` : ''})°`)
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
       .replace(/π/g, '@')
       .replace(/²/g, '^2')
       .replace(/³/g, '^3')
       .replace(/√/g, 'sqrt')
+      .replace(/∛/g, 'cbrt')
       .replace(/\s+/g, '');
 
     // Calculus: integrate(f,a,b), diff(f,a), sum(f,a,b), prod(f,a,b), limit(f,a)
@@ -289,6 +305,8 @@ export class Evaluator {
       else if (ch === ',') raw.push({ t: 'comma' });
       else if (ch === '+' || ch === '-' || ch === '*' || ch === '/' || ch === '^') {
         raw.push({ t: 'op', name: ch });
+      } else if (ch === '∠') {
+        raw.push({ t: 'op', name: '∠' });
       } else if (ch === '!' || ch === '%' || ch === '°') {
         raw.push({ t: 'op', name: ch });
       } else if (ch === '=' || ch === ':' || ch === ' ') {
@@ -299,7 +317,7 @@ export class Evaluator {
       i++;
     }
 
-    return Evaluator.insertImplicit(raw);
+    return Evaluator.insertImplicit(Evaluator.wrapBareFunctionArgs(raw));
   }
 
   /**
@@ -338,6 +356,37 @@ export class Evaluator {
       return;
     }
     throw new Error('Syntax ERROR');
+  }
+
+  /**
+   * A function typed without "(" (√2, ∛8, sin30) takes just the next number, so √2×√8 is 4, not √(2×√8).
+   * Signs and further bare functions in front of that number belong to the argument (√-4, √√16).
+   */
+  private static wrapBareFunctionArgs(tokens: Token[]): Token[] {
+    const out: Token[] = [];
+    const operandEnd = (i: number): number => {
+      let j = i;
+      while (j < tokens.length && tokens[j].t === 'op' && ['-', '+'].includes((tokens[j] as any).name)) j++;
+      const t = tokens[j];
+      if (!t) return -1;
+      if (t.t === 'num') return j + 1;
+      if (t.t === 'fn') return tokens[j + 1]?.t === 'lp' ? -1 : operandEnd(j + 1);
+      return -1;
+    };
+    for (let i = 0; i < tokens.length; i++) {
+      const tok = tokens[i];
+      out.push(tok);
+      if (tok.t === 'fn' && tokens[i + 1]?.t !== 'lp') {
+        const end = operandEnd(i + 1);
+        if (end !== -1) {
+          out.push({ t: 'lp' });
+          out.push(...Evaluator.wrapBareFunctionArgs(tokens.slice(i + 1, end)));
+          out.push({ t: 'rp' });
+          i = end - 1;
+        }
+      }
+    }
+    return out;
   }
 
   /** Insert × between touching values: 2π, 2(3), (2)(3), 3sin(x), AB, 2Ans */
@@ -529,7 +578,13 @@ export class Evaluator {
           if (a instanceof Complex || b instanceof Complex) {
             stack.push(Evaluator.toComplex(a).pow(b instanceof Complex ? b.re : b));
           } else if (a < 0 && !Number.isInteger(b)) {
-            stack.push(new Complex(a, 0).pow(b));
+            // (-8)^(1/3) = -2: a fraction with an odd denominator has a real root
+            const frac = Fraction.fromNumber(b);
+            if (frac.den % 2n === 1n && frac.den <= 1000n) {
+              const mag = Math.pow(-a, b);
+              stack.push(frac.num % 2n === 0n ? mag : -mag);
+            } else if (!Evaluator.complexMode) throw new Error('Math ERROR');
+            else stack.push(new Complex(a, 0).pow(b));
           } else if (a === 0 && b <= 0) {
             throw new Error('Math ERROR');
           } else {
@@ -559,6 +614,13 @@ export class Evaluator {
           // x° converts to whatever angle unit is active
           stack.push(Evaluator.fromRad((popNum() * Math.PI) / 180, angle));
           break;
+        case '∠': {
+          if (!Evaluator.complexMode) throw new Error('Syntax ERROR');
+          const theta = popNum();
+          const r = popNum();
+          stack.push(new Complex(r * Evaluator.trig('cos', theta, angle), r * Evaluator.trig('sin', theta, angle)));
+          break;
+        }
         case 'nPr': case 'nCr': {
           const r = integer(popNum());
           const n = integer(popNum());
@@ -645,6 +707,7 @@ export class Evaluator {
       case 'exp': return void stack.push(Math.exp(popNum()));
       case 'sqrt': {
         const a = popNum();
+        if (a < 0 && !Evaluator.complexMode) throw new Error('Math ERROR');
         return void stack.push(a < 0 ? new Complex(0, Math.sqrt(-a)) : Math.sqrt(a));
       }
       case 'cbrt': return void stack.push(Math.cbrt(popNum()));
@@ -681,13 +744,16 @@ export class Evaluator {
         need(2);
         const y = popNum();
         const x = popNum();
+        const th = Evaluator.fromRad(Math.atan2(y, x), angle);
+        Evaluator.pair = [Math.hypot(x, y), th];
         return void stack.push(Math.hypot(x, y));
       }
       case 'rec': {
         need(2);
         const theta = popNum();
         const r = popNum();
-        return void stack.push(r * Evaluator.trig('cos', theta, angle));
+        Evaluator.pair = [r * Evaluator.trig('cos', theta, angle), r * Evaluator.trig('sin', theta, angle)];
+        return void stack.push(Evaluator.pair[0]);
       }
       case 'ranint': {
         need(2);

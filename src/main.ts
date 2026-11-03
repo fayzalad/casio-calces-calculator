@@ -6,6 +6,7 @@ import { GraphPlotter } from './graph/plotter';
 import { sound } from './audio/sound';
 import { Haptics } from './audio/haptics';
 import { Evaluator } from './math/evaluator';
+import { setupModePanels } from './ui/modes';
 
 window.addEventListener('DOMContentLoaded', () => {
   // 1. Initialize Display Renderer
@@ -26,6 +27,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // 3. Setup Modals, Drawers, and Settings
   setupDrawersAndModals();
+  setupModePanels();
 
   // 4. Setup Theme Switcher
   const casioThemeBtn = document.getElementById('theme-casio-btn');

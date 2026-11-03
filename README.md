@@ -2,13 +2,13 @@
 
 ## Resume here  (rewritten each session)
 
-**Last updated 2026-10-07 on DESKTOP.**
+**Last updated 2026-11-03 on DESKTOP. Last checked: 2026-11-03.**
 
-**State:** everything is committed and live: physical-calculator accuracy pass, stacked-fraction input (on-screen `■/□` and keyboard `/`), and a new deploy path. The live site is https://fayzalad.github.io/casio-calces-calculator/ .
-**How to deploy now:** `npm run deploy` (builds, then force-pushes `dist/` as a one-commit `gh-pages` branch). Repo Settings > Pages is already "Deploy from a branch: gh-pages /". Do NOT rely on pushing to `main`: the GitHub Actions workflow was refused ("account locked due to a billing issue") and is now manual-only.
-**Next step:** pick from "Open issues" (biggest gap: stacked input for roots, integrals, sums, exponents; mixed numbers). The user may also want to clear the GitHub billing flag (Settings > Billing; open a Support ticket if nothing is unpaid).
+**State:** live site is still the 2026-10-07 build. Since then (UNCOMMITTED, not deployed): evaluator fixes (`√2×√8`, odd roots of negatives, COMP gives Math ERROR for imaginary results), DMS input, Pol/Rec two answers, `r∠θ` in CMPLX, CalcES colours matched to the app screenshot, desktop media query, and form screens for STAT / BASE-N / EQN / MATRIX / TABLE / VECTOR / DISTR (`src/ui/modes.ts`; these modes previously did nothing).
+**Next step:** `npm test`, review `git diff`, commit, `npm run deploy` (never push-to-main: Actions is manual-only). Then: look at desktop width (1440) and the new panels visually; stacked input for roots/integrals/sums/exponents; mixed numbers.
 **Get a working state:** `npm ci`, `npm test`, `npm run dev`.
-**Not verified:** on a real iPhone; non-COMP modes; the Casio-classic skin after the display changes.
+**Not verified:** real iPhone; desktop layout; panels visually other than STAT; CMPLX and GRAPH modes.
+**Gotcha:** mode panels are forms, not the real calculator's spreadsheet grid.
 
 ---
 

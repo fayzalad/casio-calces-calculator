@@ -402,11 +402,22 @@ class CalculatorStore {
     if (!this.expression.trim()) return;
 
     Evaluator.setDisplay(this.settings.displayFormat, this.settings.fixDigits);
+    Evaluator.setComplexMode(this.mode === 'CMPLX');
 
     try {
       const res = Evaluator.evaluate(this.expression, this.variables, this.settings.angleUnit);
       this.resultExact = res.exact;
       this.resultDecimal = res.decimal;
+
+      // Pol( and Rec( give two answers: show both and keep them in X and Y
+      const pair = Evaluator.pair;
+      if (pair && /pol\(|rec\(/.test(this.expression)) {
+        const isPol = /pol\(/.test(this.expression);
+        const f = (n: number) => Evaluator.formatNumber(Number(n.toPrecision(15)));
+        this.variables.X = pair[0];
+        this.variables.Y = pair[1];
+        this.resultExact = this.resultDecimal = isPol ? `r=${f(pair[0])}, θ=${f(pair[1])}` : `x=${f(pair[0])}, y=${f(pair[1])}`;
+      }
 
       if (saveHistory && typeof res.numericValue === 'number' && Number.isFinite(res.numericValue)) {
         this.variables.PreAns = this.variables.Ans;

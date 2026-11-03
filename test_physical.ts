@@ -18,10 +18,12 @@ const cases: [string, string][] = [
   ['6÷2(1+2)', '1|1'], ['(1+2', '3|3'], ['integrate(X^2,0,3)', '9|9'], ['5 nPr 2', '20|20'],
   ['2π', '2π|6.283185307'], ['0.5+0.25', '0.75|0.75'], ['1÷3', '1/3|0.3333333333'], ['√2', '√2|1.414213562'],
   ['ln(e)', '1|1'], ['log(1000)', '3|3'], ['0.1+0.2', '0.3|0.3'], ['5ᴇ3', '5000|5000'], ['1÷4ᴇ2', '1/400|2.5 × 10^-3'],
+  ['√2×√8', '4|4'], ['(-8)^(1/3)', '-2|-2'], ['∛27', '3|3'], ['9999999999×9999999999', '9.999999998 × 10^19|9.999999998 × 10^19'],
+  ["1°30'0\"", '3/2|1.5'], ["sin(30°0'0\")", '1/2|0.5'],
   ['sinh(0)', '0|0'], ['10%', '1/10|0.1'], ['5!', '120|120'], ['3×-2', '-6|-6'], ['2(3)+4(5)', '26|26'],
 ];
 for (const [e, want] of cases) { const got = ev(e); check(`${e} = ${want}`, got === want, got); }
-for (const e of ['tan(90)', '1÷0', 'ln(0)', '3+', '*3', 'sin(']) check(`${e} errors`, ev(e).startsWith('ERR'), ev(e));
+for (const e of ['tan(90)', '1÷0', 'ln(0)', '3+', '*3', 'sin(', '√(-4)', '(-2)^0.5']) check(`${e} errors`, ev(e).startsWith('ERR'), ev(e));
 
 // Display modes
 Evaluator.setDisplay('FIX', 2);
@@ -75,6 +77,25 @@ store.evaluateExpression(true);
 check('nested ⟨1¦⟨1¦2⟩⟩ = 2', store.resultExact === '2', [store.expression, store.resultExact]);
 store.clearAll(); store.insertText('5ᴇ'); store.insertText('3'); store.insertFraction();
 check('fraction key grabs whole 5ᴇ3 as numerator', store.expression === '⟨5ᴇ3¦⟩', store.expression);
+
+store.clearAll(); store.insertText('pol(3,4)'); store.evaluateExpression(true);
+check('Pol(3,4) shows r and θ', store.resultExact.startsWith('r=5, θ=53.13010235'), store.resultExact);
+store.clearAll(); store.insertText('rec(2,60)'); store.evaluateExpression(true);
+check('Rec(2,60) shows x and y', store.resultExact === 'x=1, y=1.732050808', store.resultExact);
+store.mode = 'CMPLX'; store.clearAll(); store.insertText('2∠90'); store.evaluateExpression(true);
+check('2∠90 in CMPLX = 2i', store.resultExact === '2i', store.resultExact);
+store.mode = 'COMP';
+
+import { Statistics } from './src/math/statistics.ts';
+{
+  const px = [1, 2, 4, 8];
+  const pw = Statistics.powerRegression(px, px.map(v => 3 * v * v));
+  check('power regression y=3x²', Math.abs(pw.a - 3) < 1e-9 && Math.abs(pw.b - 2) < 1e-9, [pw.a, pw.b]);
+  const lg = Statistics.logarithmicRegression(px, px.map(v => 1 + 2 * Math.log(v)));
+  check('log regression y=1+2ln x', Math.abs(lg.a - 1) < 1e-9 && Math.abs(lg.b - 2) < 1e-9, [lg.a, lg.b]);
+  const iv = Statistics.inverseRegression(px, px.map(v => 1 + 2 / v));
+  check('inverse regression y=1+2/x', Math.abs(iv.a - 1) < 1e-9 && Math.abs(iv.b - 2) < 1e-9, [iv.a, iv.b]);
+}
 
 console.log(bad ? `\n${bad} FAILED` : '\nall passed');
 process.exit(bad ? 1 : 0);

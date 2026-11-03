@@ -101,7 +101,7 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
   },
   {
     id: 'key_logax',
-    primary: 'Log_a x',
+    primary: 'Logₐx',
     shift: 'Σ',
     alpha: 'Π',
     action: (mod) => {
@@ -190,7 +190,13 @@ export const FUNCTION_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'SHIFT') store.primeFactorizeResult();
       else if (mod === 'ALPHA') store.insertText('B');
-      else store.insertText('°');
+      else {
+        // ° then ' then " as the key is pressed again, like the real DMS key
+        const head = store.expression.slice(0, store.cursorPos);
+        if (!store.justEvaluated && /\d°\d+\.?\d*$/.test(head)) store.insertText("'");
+        else if (!store.justEvaluated && /'\d+\.?\d*$/.test(head)) store.insertText('"');
+        else store.insertText('°');
+      }
     }
   },
   {
@@ -531,7 +537,8 @@ export const NUMPAD_KEYS: KeyDefinition[] = [
       if (mod === 'SHIFT') store.insertText('π');
       else if (mod === 'ALPHA') store.insertText('e');
       else store.insertText('ᴇ');
-    }
+    },
+    cssClass: 'btn-num'
   },
   {
     id: 'key_ans',
@@ -540,7 +547,8 @@ export const NUMPAD_KEYS: KeyDefinition[] = [
     action: (mod) => {
       if (mod === 'ALPHA') store.insertText('PreAns');
       else store.insertText('Ans');
-    }
+    },
+    cssClass: 'btn-num'
   },
   {
     id: 'key_equals',

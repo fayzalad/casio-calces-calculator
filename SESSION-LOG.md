@@ -1,0 +1,34 @@
+# Session log
+
+### 2026-11-03 — Log/power/inverse regression, TABLE `2X` fix, README resume
+
+- **Did:** added `logarithmicRegression`, `powerRegression`, `inverseRegression` to `src/math/statistics.ts` and the STAT panel; fixed X substitution in TABLE/EQN (`2X` was read as 0); rewrote README "Resume here".
+- **Why:** README claimed 6 regression types but only 3 existed; TABLE bug found while smoke-testing panels.
+- **Files:** `src/math/statistics.ts`, `src/ui/modes.ts`, `test_physical.ts`, `README.md`.
+- **Undo:** `git checkout -- .` reverts all uncommitted work from today.
+- **Checked:** `tsc`, tests (3 new) pass; TABLE g(-3)=-6 and Power regression shown in browser. Not verified: desktop width.
+
+### 2026-11-03 — Mode screens (STAT, BASE-N, EQN, MATRIX, TABLE, VECTOR, DISTR)
+
+- **Did:** found the mode menu only set a flag for these modes (math libraries existed but had no UI). Added `src/ui/modes.ts`: a form panel per mode, opened whenever the mode changes (menu or SHIFT+number keys); Done/✕ returns to COMP. Wired in `src/main.ts`; styles appended to `src/style.css`.
+- **Why:** user asked me to check the mode menu; selecting a mode appeared to do nothing.
+- **Files:** `src/ui/modes.ts` (new), `src/main.ts`, `src/style.css`.
+- **Undo:** delete `src/ui/modes.ts`, remove the two lines in `main.ts` and the "Mode screens" CSS block.
+- **Checked:** `tsc` + tests pass; all 7 panels give sensible default results in the browser (e.g. DISTR normal CD -1..1 = 0.68268947, MATRIX 19/22/43/50); STAT panel viewed at phone size. NOT verified: the other panels visually, regression types beyond Linear, desktop width. Logarithmic/power/inverse regression are not in `statistics.ts` (README claims them).
+
+### 2026-11-03 — Polish pass 2: DMS, Pol/Rec, polar entry
+
+- **Did:** DMS input (`1°30'15"`, the ° key now cycles ° ' "); `Pol(`/`Rec(` show both answers and store them in X and Y; `r∠θ` entry in CMPLX; Casio-classic active tab text now white.
+- **Why:** gaps left after pass 1.
+- **Files:** `src/math/evaluator.ts`, `src/state/store.ts`, `src/ui/keypad.ts`, `src/style.css`, `test_physical.ts`.
+- **Undo:** `git checkout -- .` (still uncommitted, includes pass 1).
+- **Checked:** `tsc` + `npm test` pass (4 new tests); classic skin viewed at phone size. NOT verified: choosing a mode from the menu (STAT etc.) showed no visible change in my one click, unconfirmed whether that is a bug or my click; desktop layout.
+
+### 2026-11-03 — Calculator polish pass (evaluator fixes + CalcES look)
+
+- **Did:** evaluator: bare functions take just the next number (`√2×√8`=4); `(-8)^(1/3)`=-2; `√(-4)` and `(-2)^0.5` are Math ERROR outside CMPLX (new `Evaluator.setComplexMode`, set in `evaluateExpression`); results >=1e10 no longer print as long integers; `∛` symbol parses. UI: CalcES dark theme recoloured to match the app screenshot (grey function keys, near-black number keys incl. Exp/Ans, lighter bezel, bigger sublabels, rounder keys, `Logₐx`); desktop media query (min 900x700) widens chassis to 640px.
+- **Why:** user asked to polish and match a real scientific calculator and the native app look.
+- **Files:** `src/math/evaluator.ts`, `src/state/store.ts`, `src/ui/keypad.ts`, `src/style.css`, `test_physical.ts`.
+- **Undo:** `git checkout -- .` (nothing committed yet).
+- **Checked:** `tsc`, `npm test` pass; phone-size screenshot viewed. NOT verified: desktop layout (browser pane too small to trigger the media query), Casio-classic skin after recolour (not touched), non-COMP modes, deploy not run.
+

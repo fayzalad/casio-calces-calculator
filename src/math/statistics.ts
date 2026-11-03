@@ -175,4 +175,29 @@ export class Statistics {
       predictX: (yVal: number) => (yVal > 0 && b !== 0 ? Math.log(yVal / a) / b : NaN)
     };
   }
+
+  /** y = a + b·ln(x) */
+  static logarithmicRegression(x: number[], y: number[]): RegressionResult {
+    if (!x.every(v => v > 0)) throw new Error('Stat ERROR: Logarithmic requires positive X values');
+    const lin = Statistics.linearRegression(x.map(Math.log), y);
+    const { a, b } = lin;
+    return { type: 'logarithmic', a, b, r: lin.r, r2: lin.r2, predictY: v => a + b * Math.log(v) };
+  }
+
+  /** y = a·x^b */
+  static powerRegression(x: number[], y: number[]): RegressionResult {
+    if (!x.every(v => v > 0) || !y.every(v => v > 0)) throw new Error('Stat ERROR: Power requires positive X and Y values');
+    const lin = Statistics.linearRegression(x.map(Math.log), y.map(Math.log));
+    const a = Math.exp(lin.a);
+    const b = lin.b;
+    return { type: 'power', a, b, r: lin.r, r2: lin.r2, predictY: v => a * Math.pow(v, b) };
+  }
+
+  /** y = a + b/x */
+  static inverseRegression(x: number[], y: number[]): RegressionResult {
+    if (!x.every(v => v !== 0)) throw new Error('Stat ERROR: Inverse requires non-zero X values');
+    const lin = Statistics.linearRegression(x.map(v => 1 / v), y);
+    const { a, b } = lin;
+    return { type: 'inverse', a, b, r: lin.r, r2: lin.r2, predictY: v => a + b / v };
+  }
 }
