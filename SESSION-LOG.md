@@ -1,5 +1,13 @@
 # Session log
 
+### 2026-11-03 — Complex maths, distributions, BASE-N, graph, desktop side panel
+
+- **Did:** CMPLX: complex-aware exp/ln/log/√/trig/powers, `conjg arg re im`, float-dust cleanup, S⇔D flips a+bi / r∠θ. DISTR: replaced 1e-7 erf with ~1e-15 erf/erfc and fixed invNormal (0.975 gave 0.76). BASE-N: negatives show 32-bit two's complement, FFFFFFFF parses as -1. GRAPH: canvas now sizes itself, draws on open, theme colours, nice grid + labels, asymptote gaps, Done button works. Desktop (>=1100x700): history + memory side panel (`src/ui/sidebar.ts`).
+- **Why:** user asked to keep refining until everything works; audit found these as real wrong answers/blank graph.
+- **Files:** `src/math/evaluator.ts`, `complex.ts`, `distributions.ts`, `baseN.ts`, `src/graph/plotter.ts`, `src/main.ts`, `src/ui/sidebar.ts` (new), `index.html`, `src/style.css`, `test_physical.ts`.
+- **Undo:** `git revert` the commit made after this entry (or `git checkout -- .` if uncommitted).
+- **Checked:** `tsc` + tests (13 new) pass; graph, MATRIX panel and desktop 1440x900 layout viewed in the browser pane. Not verified: real phone, touch pan/zoom on graph, EQN/VECTOR/BASE-N panels visually.
+
 ### 2026-11-03 — Committed and deployed today's work
 
 - **Did:** committed `6feceb0` on main, pushed to origin/main, `npm run deploy` force-pushed gh-pages (`e98a22d`).

@@ -97,5 +97,23 @@ import { Statistics } from './src/math/statistics.ts';
   check('inverse regression y=1+2/x', Math.abs(iv.a - 1) < 1e-9 && Math.abs(iv.b - 2) < 1e-9, [iv.a, iv.b]);
 }
 
+import { Distributions } from './src/math/distributions.ts';
+import { BaseN } from './src/math/baseN.ts';
+{
+  const near = (a: number, b: number, t = 1e-9) => Math.abs(a - b) < t;
+  check('normalCD(-1,1) = 0.6826894921', near(Distributions.normalCD(-1, 1), 0.6826894921, 1e-9), Distributions.normalCD(-1, 1));
+  check('invNormal(0.975) = 1.959963985', near(Distributions.invNormal(0.975), 1.959963985), Distributions.invNormal(0.975));
+  check('invNormal(0.001) = -3.090232306', near(Distributions.invNormal(0.001), -3.090232306), Distributions.invNormal(0.001));
+  check('BASE-N: FFFFFFFF parses as -1', BaseN.parse('FFFFFFFF', 'HEX') === -1, BaseN.parse('FFFFFFFF', 'HEX'));
+  check('BASE-N: -1 shows FFFFFFFF', BaseN.format(-1, 'HEX') === 'FFFFFFFF', BaseN.format(-1, 'HEX'));
+}
+// Complex mode
+store.mode = 'CMPLX';
+for (const [e, want] of [['e^(iπ)', '-1'], ['i^2', '-1'], ['(1+2i)(3-i)', '5 + 5i'], ['√(-4)', '2i'], ['conjg(1+i)', '1 - i'], ['ln(-1)', '3.141592654i']]) {
+  store.clearAll(); store.insertText(e); store.evaluateExpression(true);
+  check(`CMPLX ${e} = ${want}`, store.resultExact === want, store.resultExact);
+}
+store.mode = 'COMP';
+
 console.log(bad ? `\n${bad} FAILED` : '\nall passed');
 process.exit(bad ? 1 : 0);

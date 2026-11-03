@@ -31,12 +31,7 @@ export class GraphPlotter {
   }
 
   resize(width: number, height: number): void {
-    const dpr = window.devicePixelRatio || 1;
-    this.canvas.width = width * dpr;
-    this.canvas.height = height * dpr;
-    this.canvas.style.width = `${width}px`;
-    this.canvas.style.height = `${height}px`;
-    this.ctx.scale(dpr, dpr);
+    void width; void height;
     this.render();
   }
 
@@ -155,100 +150,100 @@ export class GraphPlotter {
     this.render();
   }
 
-  render(): void {
+  /** Match the canvas bitmap to its on-screen size (it is hidden, and so 0×0, until the panel opens). */
+  private fit(): { width: number; height: number } {
     const rect = this.canvas.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.max(1, Math.round(rect.width * dpr));
+    const h = Math.max(1, Math.round(rect.height * dpr));
+    if (this.canvas.width !== w || this.canvas.height !== h) {
+      this.canvas.width = w;
+      this.canvas.height = h;
+    }
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { width: rect.width, height: rect.height };
+  }
 
+  private colors() {
+    const light = document.documentElement.getAttribute('data-theme') === 'casio-classic';
+    return light
+      ? { grid: '#d5d9d0', axis: '#2563eb', curve: '#15803d', text: '#4b5563' }
+      : { grid: '#2d333b', axis: '#58a6ff', curve: '#3fb950', text: '#9ca3af' };
+  }
+
+  /** A 1/2/5 × 10ⁿ step giving roughly eight grid lines across the range. */
+  private niceStep(range: number): number {
+    const raw = range / 8;
+    const pow = Math.pow(10, Math.floor(Math.log10(raw)));
+    const f = raw / pow;
+    return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * pow;
+  }
+
+  render(): void {
+    const { width, height } = this.fit();
+    if (width < 2 || height < 2) return;
+    const col = this.colors();
     const ctx = this.ctx;
     ctx.clearRect(0, 0, width, height);
 
-    // Coordinate conversions
     const toScreenX = (x: number) => ((x - this.xMin) / (this.xMax - this.xMin)) * width;
     const toScreenY = (y: number) => height - ((y - this.yMin) / (this.yMax - this.yMin)) * height;
+    const label = (v: number) => String(Number(v.toPrecision(6)));
 
-    // Draw Grid Lines
-    ctx.strokeStyle = '#2d333b';
+    ctx.font = '10px sans-serif';
+    ctx.fillStyle = col.text;
+    ctx.strokeStyle = col.grid;
     ctx.lineWidth = 1;
 
-    const xRange = this.xMax - this.xMin;
-    const xStep = Math.pow(10, Math.floor(Math.log10(xRange))) / 2;
+    const xStep = this.niceStep(this.xMax - this.xMin);
+    const yStep = this.niceStep(this.yMax - this.yMin);
+    const originX = Math.min(Math.max(toScreenX(0), 0), width);
+    const originY = Math.min(Math.max(toScreenY(0), 0), height);
 
-    const startX = Math.floor(this.xMin / xStep) * xStep;
-    for (let x = startX; x <= this.xMax; x += xStep) {
+    for (let x = Math.ceil(this.xMin / xStep) * xStep; x <= this.xMax; x += xStep) {
       const sx = toScreenX(x);
-      ctx.beginPath();
-      ctx.moveTo(sx, 0);
-      ctx.lineTo(sx, height);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(sx, 0); ctx.lineTo(sx, height); ctx.stroke();
+      if (Math.abs(x) > xStep / 2) ctx.fillText(label(x), sx + 2, Math.min(originY + 11, height - 2));
     }
-
-    const yRange = this.yMax - this.yMin;
-    const yStep = Math.pow(10, Math.floor(Math.log10(yRange))) / 2;
-
-    const startY = Math.floor(this.yMin / yStep) * yStep;
-    for (let y = startY; y <= this.yMax; y += yStep) {
+    for (let y = Math.ceil(this.yMin / yStep) * yStep; y <= this.yMax; y += yStep) {
       const sy = toScreenY(y);
-      ctx.beginPath();
-      ctx.moveTo(0, sy);
-      ctx.lineTo(width, sy);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, sy); ctx.lineTo(width, sy); ctx.stroke();
+      if (Math.abs(y) > yStep / 2) ctx.fillText(label(y), Math.min(originX + 3, width - 30), sy - 2);
     }
 
-    // Draw Axes
-    ctx.strokeStyle = '#58a6ff';
+    ctx.strokeStyle = col.axis;
     ctx.lineWidth = 2;
-
-    const originX = toScreenX(0);
-    const originY = toScreenY(0);
-
-    // X Axis
-    if (originY >= 0 && originY <= height) {
-      ctx.beginPath();
-      ctx.moveTo(0, originY);
-      ctx.lineTo(width, originY);
-      ctx.stroke();
+    if (toScreenY(0) >= 0 && toScreenY(0) <= height) {
+      ctx.beginPath(); ctx.moveTo(0, toScreenY(0)); ctx.lineTo(width, toScreenY(0)); ctx.stroke();
+    }
+    if (toScreenX(0) >= 0 && toScreenX(0) <= width) {
+      ctx.beginPath(); ctx.moveTo(toScreenX(0), 0); ctx.lineTo(toScreenX(0), height); ctx.stroke();
     }
 
-    // Y Axis
-    if (originX >= 0 && originX <= width) {
-      ctx.beginPath();
-      ctx.moveTo(originX, 0);
-      ctx.lineTo(originX, height);
-      ctx.stroke();
-    }
-
-    // Draw Function Curve
-    if (this.f) {
-      ctx.strokeStyle = '#3fb950';
-      ctx.lineWidth = 2.5;
-      ctx.beginPath();
-
-      let started = false;
-      const steps = width * 2;
-      for (let i = 0; i <= steps; i++) {
-        const sx = (i / steps) * width;
-        const x = this.xMin + (i / steps) * (this.xMax - this.xMin);
-
-        try {
-          const y = this.f(x);
-          if (Number.isFinite(y)) {
-            const sy = toScreenY(y);
-            if (!started) {
-              ctx.moveTo(sx, sy);
-              started = true;
-            } else {
-              ctx.lineTo(sx, sy);
-            }
-          } else {
-            started = false;
-          }
-        } catch {
-          started = false;
-        }
+    if (!this.f) return;
+    ctx.strokeStyle = col.curve;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    let started = false;
+    let prevY = 0;
+    const steps = Math.ceil(width * 2);
+    for (let i = 0; i <= steps; i++) {
+      const sx = (i / steps) * width;
+      const x = this.xMin + (i / steps) * (this.xMax - this.xMin);
+      let sy = NaN;
+      try {
+        const y = this.f(x);
+        if (Number.isFinite(y)) sy = toScreenY(y);
+      } catch {
+        // outside the domain (ln of a negative, ÷0...): leave a gap
       }
-
-      ctx.stroke();
+      if (!Number.isFinite(sy) || Math.abs(sy) > height * 50) { started = false; continue; }
+      // a huge jump between neighbours is an asymptote (tan x), not a line to draw
+      if (started && Math.abs(sy - prevY) > height * 1.5) started = false;
+      if (!started) { ctx.moveTo(sx, sy); started = true; } else ctx.lineTo(sx, sy);
+      prevY = sy;
     }
+    ctx.stroke();
   }
 }

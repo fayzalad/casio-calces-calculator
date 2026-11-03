@@ -29,7 +29,8 @@ const FUNCTIONS: Record<string, number> = {
   cot: 1, sec: 1, csc: 1, acot: 1,
   ln: 1, log: 1, logab: 2, exp: 1, sqrt: 1, cbrt: 1, abs: 1,
   floor: 1, ceil: 1, round: 1, int: 1, frac: 1, sign: 1,
-  gcd: 2, lcm: 2, pol: 2, rec: 2, root: 2, ranint: 2
+  gcd: 2, lcm: 2, pol: 2, rec: 2, root: 2, ranint: 2,
+  conjg: 1, arg: 1, re: 1, im: 1
 };
 
 /** Operators: precedence and associativity (higher binds tighter). */
@@ -81,9 +82,20 @@ export class Evaluator {
     const { value, approx } = Evaluator.evalValue(expr, variables, angleUnit);
 
     if (value instanceof Complex) {
-      const s = value.toRectangularString();
-      return { exact: s, decimal: s, numericValue: value };
+      // Drop float dust such as the 1.2e-16i left by e^(iπ)
+      const scale = Math.max(Math.abs(value.re), Math.abs(value.im), 1e-300);
+      const clean = new Complex(
+        Math.abs(value.re) < scale * 1e-13 ? 0 : value.re,
+        Math.abs(value.im) < scale * 1e-13 ? 0 : value.im
+      );
+      if (clean.im === 0) return Evaluator.evaluateReal(clean.re, approx, expr);
+      // S⇔D flips between a+bi and r∠θ
+      return { exact: clean.toRectangularString(), decimal: clean.toPolarString(angleUnit), numericValue: clean };
     }
+    return Evaluator.evaluateReal(value, approx, expr);
+  }
+
+  private static evaluateReal(value: number | Complex, approx: boolean, expr: string): EvaluationResult {
 
     // The real calculator holds 15 digits internally, which hides float noise like 0.30000000000000004
     let num = Number(value);
@@ -576,7 +588,15 @@ export class Evaluator {
           const b = pop();
           const a = pop();
           if (a instanceof Complex || b instanceof Complex) {
-            stack.push(Evaluator.toComplex(a).pow(b instanceof Complex ? b.re : b));
+            const za = Evaluator.toComplex(a);
+            if (typeof b === 'number' && Number.isInteger(b) && Math.abs(b) <= 64) {
+              // whole powers by repeated multiplication so i² is exactly -1
+              let acc = new Complex(1, 0);
+              for (let k = 0; k < Math.abs(b); k++) acc = acc.mul(za);
+              stack.push(b < 0 ? new Complex(1, 0).div(acc) : acc);
+            } else if (za.re === 0 && za.im === 0) {
+              throw new Error('Math ERROR');
+            } else stack.push(za.pow(b));
           } else if (a < 0 && !Number.isInteger(b)) {
             // (-8)^(1/3) = -2: a fraction with an odd denominator has a real root
             const frac = Fraction.fromNumber(b);
@@ -645,6 +665,26 @@ export class Evaluator {
     return stack[0];
   }
 
+  /** Functions of a complex number; null means "not defined for complex, use the real version". */
+  private static complexFunction(name: string, z: Complex, angle: AngleUnit): Value | null {
+    const k = Evaluator.toRad(1, angle);
+    switch (name) {
+      case 'exp': return z.exp();
+      case 'ln': if (z.re === 0 && z.im === 0) throw new Error('Math ERROR'); return z.ln();
+      case 'log': if (z.re === 0 && z.im === 0) throw new Error('Math ERROR'); return z.ln().div(new Complex(Math.LN10, 0));
+      case 'sqrt': return Complex.fromPolar(Math.sqrt(z.abs()), z.arg() / 2);
+      case 'sin': return new Complex(z.re * k, z.im * k).sin();
+      case 'cos': return new Complex(z.re * k, z.im * k).cos();
+      case 'tan': return new Complex(z.re * k, z.im * k).tan();
+      case 'abs': return z.abs();
+      case 'conjg': return z.conj();
+      case 'arg': return Evaluator.fromRad(z.arg(), angle);
+      case 're': return z.re;
+      case 'im': return z.im;
+      default: return null;
+    }
+  }
+
   private static applyFunction(
     name: string,
     stack: Value[],
@@ -659,6 +699,21 @@ export class Evaluator {
     const domain = (ok: boolean) => {
       if (!ok) throw new Error('Math ERROR');
     };
+
+    // Complex arguments (CMPLX mode)
+    const topVal = stack[stack.length - 1];
+    if (topVal instanceof Complex || (Evaluator.complexMode && ['ln', 'log', 'sqrt'].includes(name))) {
+      const z = Evaluator.toComplex(topVal as Value);
+      const out = Evaluator.complexFunction(name, z, angle);
+      if (out !== null) {
+        stack.pop();
+        return void stack.push(out);
+      }
+    }
+    if (['conjg', 'arg', 're', 'im'].includes(name)) {
+      const x = popNum();
+      return void stack.push(name === 'arg' ? Evaluator.fromRad(x < 0 ? Math.PI : 0, angle) : name === 'im' ? 0 : x);
+    }
 
     switch (name) {
       case 'sin': case 'cos': case 'tan':

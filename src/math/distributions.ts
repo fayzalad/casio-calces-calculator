@@ -12,31 +12,36 @@ export class Distributions {
     return (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * z * z);
   }
 
-  /**
-   * Error function approximation
-   */
+  /** Error function: Taylor series for small |x|, erfc continued fraction beyond (about 1e-15 accurate). */
   static erf(x: number): number {
-    // Abramowitz and Stegun formula 7.1.26
-    const a1 = 0.254829592;
-    const a2 = -0.284496736;
-    const a3 = 1.421413741;
-    const a4 = -1.453152027;
-    const a5 = 1.061405429;
-    const p = 0.3275911;
+    const ax = Math.abs(x);
+    if (ax >= 2.5) return x < 0 ? Distributions.erfc(ax) - 1 : 1 - Distributions.erfc(ax);
+    let term = ax;
+    let sum = ax;
+    for (let n = 1; n < 80; n++) {
+      term *= -(ax * ax) / n;
+      const add = term / (2 * n + 1);
+      sum += add;
+      if (Math.abs(add) < 1e-17) break;
+    }
+    const r = (2 / Math.sqrt(Math.PI)) * sum;
+    return x < 0 ? -r : r;
+  }
 
-    const sign = x < 0 ? -1 : 1;
-    const absX = Math.abs(x);
-    const t = 1.0 / (1.0 + p * absX);
-    const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX);
-
-    return sign * y;
+  /** Complementary error function, accurate in the tails. */
+  static erfc(x: number): number {
+    if (x < 0) return 2 - Distributions.erfc(-x);
+    if (x < 2.5) return 1 - Distributions.erf(x);
+    let f = x;
+    for (let k = 80; k >= 1; k--) f = x + k / 2 / f;
+    return Math.exp(-x * x) / Math.sqrt(Math.PI) / f;
   }
 
   /**
    * Standard Normal CDF: Phi(z)
    */
   static stdNormalCDF(z: number): number {
-    return 0.5 * (1 + Distributions.erf(z / Math.SQRT2));
+    return 0.5 * Distributions.erfc(-z / Math.SQRT2);
   }
 
   /**
@@ -91,38 +96,27 @@ export class Distributions {
       3.754408661907416
     ];
 
+    // Acklam's rational approximation: central region and the two tails
+    const pLow = 0.02425;
     let z = 0;
-    const q = area - 0.5;
-
-    if (Math.abs(q) <= 0.42) {
+    if (area < pLow || area > 1 - pLow) {
+      const r = Math.sqrt(-2 * Math.log(area < 0.5 ? area : 1 - area));
+      z =
+        (((((c[1] * r + c[2]) * r + c[3]) * r + c[4]) * r + c[5]) * r + c[6]) /
+        ((((d[1] * r + d[2]) * r + d[3]) * r + d[4]) * r + 1);
+      if (area > 0.5) z = -z;
+    } else {
+      const q = area - 0.5;
       const r = q * q;
       z =
-        (q *
-          (((((a[1] * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * r + a[6])) /
-        ((((((b[1] * r + b[2]) * r + b[3]) * r + b[4]) * r + b[5]) * r + 1.0));
-    } else {
-      const r = area < 0.5 ? area : 1.0 - area;
-      const s = Math.log(-Math.log(r));
-      let t =
-        c[1] +
-        s *
-          (c[2] +
-            s *
-              (c[3] +
-                s *
-                  (c[4] +
-                    s * (c[5] + s * c[6]))));
-      const u =
-        1.0 +
-        s *
-          (d[1] +
-            s *
-              (d[2] +
-                s *
-                  (d[3] +
-                    s * d[4])));
-      z = t / u;
-      if (area < 0.5) z = -z;
+        (((((a[1] * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * r + a[6]) * q /
+        (((((b[1] * r + b[2]) * r + b[3]) * r + b[4]) * r + b[5]) * r + 1);
+    }
+    // Two Halley steps against the CDF bring it to full precision
+    for (let i = 0; i < 2; i++) {
+      const e = Distributions.stdNormalCDF(z) - area;
+      const u = e * Math.sqrt(2 * Math.PI) * Math.exp((z * z) / 2);
+      z -= u / (1 + (z * u) / 2);
     }
 
     return mu + z * sigma;

@@ -7,6 +7,7 @@ import { sound } from './audio/sound';
 import { Haptics } from './audio/haptics';
 import { Evaluator } from './math/evaluator';
 import { setupModePanels } from './ui/modes';
+import { setupSidebar } from './ui/sidebar';
 
 window.addEventListener('DOMContentLoaded', () => {
   // 1. Initialize Display Renderer
@@ -28,6 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
   // 3. Setup Modals, Drawers, and Settings
   setupDrawersAndModals();
   setupModePanels();
+  setupSidebar();
 
   // 4. Setup Theme Switcher
   const casioThemeBtn = document.getElementById('theme-casio-btn');
@@ -122,8 +124,21 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('graph-plot-btn')?.addEventListener('click', plotCurrentExpr);
     document.getElementById('graph-reset-btn')?.addEventListener('click', () => plotter?.resetView());
 
-    document.getElementById('graph-close-btn')?.addEventListener('click', () => {
+    const closeGraph = () => {
       graphPanel?.classList.add('hidden');
+      if (store.mode === 'GRAPH') store.setMode('COMP');
+    };
+    document.getElementById('graph-close-btn')?.addEventListener('click', closeGraph);
+    graphPanel?.querySelector('.btn-done')?.addEventListener('click', closeGraph);
+    document.getElementById('graph-expr-input')?.addEventListener('keydown', e => {
+      if ((e as KeyboardEvent).key === 'Enter') plotCurrentExpr();
+    });
+    // Draw as soon as the panel opens (the canvas has no size while hidden)
+    let wasGraph = false;
+    store.subscribe(() => {
+      const isGraph = store.mode === 'GRAPH';
+      if (isGraph && !wasGraph) requestAnimationFrame(() => { plotter?.resetView(); plotCurrentExpr(); });
+      wasGraph = isGraph;
     });
   }
 

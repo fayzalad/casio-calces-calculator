@@ -94,7 +94,7 @@
     <!-- 2D Function Grapher Modal -->
     <div id="graph-panel" class="overlay-panel hidden">
       <div class="panel-header">
-        <h3>2D Function Grapher (y = f(x))</h3>
+        <h3>Graph  y = f(x)</h3>
         <button id="graph-close-btn" class="btn-close-modal">✕</button>
       </div>
       <div class="graph-input-row">
@@ -102,6 +102,7 @@
         <input type="text" id="graph-expr-input" value="sin(x)" placeholder="e.g. sin(x), x^2 - 4">
         <button id="graph-plot-btn" class="btn-sm">Plot</button>
       </div>
+      <p class="graph-hint">Angles follow the DEG/RAD/GRA pill: use RAD for the usual sine wave. Drag to pan, pinch or scroll to zoom.</p>
       <div class="graph-canvas-container">
         <canvas id="graph-canvas"></canvas>
       </div>

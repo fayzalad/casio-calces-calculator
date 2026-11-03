@@ -106,7 +106,7 @@ export class Complex {
     return `${r} ${sign} ${iPart}`;
   }
 
-  toPolarString(angleUnit: 'DEG' | 'RAD' | 'GRA' = 'DEG', precision: number = 8): string {
+  toPolarString(angleUnit: 'DEG' | 'RAD' | 'GRA' = 'DEG', precision: number = 10): string {
     const r = Number(this.abs().toPrecision(precision));
     let theta = this.arg();
 
@@ -117,6 +117,6 @@ export class Complex {
     }
 
     const t = Number(theta.toPrecision(precision));
-    return `${r} ∠ ${t}°`;
+    return `${r}∠${t}${angleUnit === 'DEG' ? '°' : ''}`;
   }
 }
