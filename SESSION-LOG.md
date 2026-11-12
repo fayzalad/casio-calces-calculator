@@ -1,5 +1,11 @@
 # Session log
 
+### 2026-11-13 — Deployed quieter click + working settings
+
+- **Did:** `npm run deploy` (0f9657b to gh-pages) and pushed `main`, on the user's request.
+- **Files:** `gh-pages`, `origin/main`. **Undo:** `git revert 0f9657b`, deploy, push.
+- **Checked:** see the line below this entry's commit; the live site was polled for the new JS (`index-BgjZzdWD.js`).
+
 ### 2026-11-13 — Quieter key click; Sound and Haptics settings now actually work
 
 - **Did:** key click gain 0.08 -> 0.02 (`src/audio/sound.ts`). Settings > "Key Click Sound" and "Vibration / Haptics" were saved but never applied: `main.ts` now sets `sound.enabled` / `Haptics.enabled` from settings at start, and `drawers.ts` updates them (and the iPhone switches) when toggled.
