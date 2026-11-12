@@ -11,9 +11,9 @@
   <meta name="apple-mobile-web-app-title" content="CalcES 991">
   <meta name="theme-color" content="#121415">
   <link rel="manifest" href="./manifest.webmanifest">
-
-  <script type="module" crossorigin src="./assets/index-FZh14feb.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CjSYCzT8.css">
+
+  <script type="module" crossorigin src="./assets/index-BgjZzdWD.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-UdqkGqIi.css">
 </head>
 <body>
   <div id="app" class="calculator-app">
@@ -95,7 +95,7 @@
     <!-- 2D Function Grapher Modal -->
     <div id="graph-panel" class="overlay-panel hidden">
       <div class="panel-header">
-        <h3>2D Function Grapher (y = f(x))</h3>
+        <h3>Graph  y = f(x)</h3>
         <button id="graph-close-btn" class="btn-close-modal">✕</button>
       </div>
       <div class="graph-input-row">
@@ -103,6 +103,7 @@
         <input type="text" id="graph-expr-input" value="sin(x)" placeholder="e.g. sin(x), x^2 - 4">
         <button id="graph-plot-btn" class="btn-sm">Plot</button>
       </div>
+      <p class="graph-hint">Angles follow the DEG/RAD/GRA pill: use RAD for the usual sine wave. Drag to pan, pinch or scroll to zoom.</p>
       <div class="graph-canvas-container">
         <canvas id="graph-canvas"></canvas>
       </div>
@@ -210,6 +211,24 @@
             </select>
           </div>
           <div class="setting-row">
+            <label for="setting-format">Number Format (SETUP)</label>
+            <select id="setting-format">
+              <option value="NORM1">Norm 1 (default)</option>
+              <option value="NORM2">Norm 2</option>
+              <option value="FIX">Fix (fixed decimals)</option>
+              <option value="SCI">Sci (significant digits)</option>
+              <option value="ENG">Eng (powers of 3)</option>
+            </select>
+          </div>
+          <div class="setting-row" id="setting-digits-row">
+            <label for="setting-digits">Digits (Fix / Sci)</label>
+            <select id="setting-digits">
+              <option>0</option><option>1</option><option>2</option><option>3</option>
+              <option>4</option><option>5</option><option>6</option><option>7</option>
+              <option>8</option><option>9</option>
+            </select>
+          </div>
+          <div class="setting-row">
             <label for="setting-sound">Key Click Sound</label>
             <input type="checkbox" id="setting-sound" checked>
           </div>
@@ -224,6 +243,6 @@
       </div>
     </div>
   </div>
-
+
 </body>
 </html>

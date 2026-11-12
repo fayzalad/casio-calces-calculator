@@ -1,4 +1,4 @@
-const CACHE_NAME = 'casio-calces-cache-v2';
+const CACHE_NAME = 'casio-calces-cache-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -31,25 +31,33 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
+  // Pages: try the network first so a new deploy shows up on the next open;
+  // fall back to the saved copy when offline.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          const copy = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request).then((hit) => hit || caches.match('./index.html')))
+    );
+    return;
+  }
+
+  // Everything else (hashed JS/CSS, icons): saved copy first, then network.
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
+      if (cachedResponse) return cachedResponse;
       return fetch(event.request).then((networkResponse) => {
-        // Cache successful requests for assets
         if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
           const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
         }
         return networkResponse;
-      }).catch(() => {
-        // Fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('./index.html') || caches.match('./');
-        }
       });
     })
   );
