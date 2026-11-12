@@ -1,5 +1,10 @@
 # Session log
 
+### 2026-11-13 — Pushed main
+
+- **Did:** `git push origin main` (6147d6a..883f433), on the user's request. **Why:** the haptics commits were local only.
+- **Files:** `origin/main`. **Undo:** n/a (revert with a new commit if needed). **Checked:** `git status` shows main even with origin.
+
 ### 2026-11-13 — iPhone haptics committed and deployed
 
 - **Did:** committed the iPhone haptics change as `688ba80` on `main` and ran `npm run deploy`, which updated `gh-pages`.
