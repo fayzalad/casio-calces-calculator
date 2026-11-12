@@ -1,4 +1,5 @@
 import { store } from '../state/store';
+import { setTapHaptics } from '../audio/haptics';
 import { CASIO_CONSTANTS } from '../math/constants';
 import { CASIO_CONVERSIONS } from '../math/conversions';
 import { templatesToText } from '../math/templates';
@@ -342,6 +343,7 @@ function setupSettingsModal(): void {
     hapticToggle.checked = store.settings.hapticsEnabled;
     hapticToggle.addEventListener('change', () => {
       store.settings.hapticsEnabled = hapticToggle.checked;
+      setTapHaptics(hapticToggle.checked);
       store.notify();
     });
   }

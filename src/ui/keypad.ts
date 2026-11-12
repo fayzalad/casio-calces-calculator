@@ -1,6 +1,6 @@
 import { store } from '../state/store';
 import { sound } from '../audio/sound';
-import { Haptics } from '../audio/haptics';
+import { Haptics, isHapticSwitch } from '../audio/haptics';
 import { KeyModifier } from '../types/calculator';
 
 export interface KeyDefinition {
@@ -600,7 +600,7 @@ function createKeyUnit(def: KeyDefinition): HTMLElement {
 
   // Touch and Click handling
   btn.addEventListener('click', (e) => {
-    e.preventDefault();
+    if (!isHapticSwitch(e.target)) e.preventDefault(); // cancelling the iPhone haptic switch's click would stop its buzz
     const isSpecial = def.id === 'key_shift' || def.id === 'key_alpha' || def.id === 'key_equals';
     sound.playKeyClick(isSpecial);
     if (isSpecial) Haptics.specialClick();

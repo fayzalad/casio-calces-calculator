@@ -1,5 +1,13 @@
 # Session log
 
+### 2026-11-13 — iPhone haptics (invisible switch over every button)
+
+- **Did:** `src/audio/haptics.ts` gained `initTapHaptics`/`setTapHaptics`/`isHapticSwitch`: on iPhone (no `navigator.vibrate`) an invisible native `<input type=checkbox switch class=hx>` is laid over every `<button>` (MutationObserver re-adds it), so the finger toggles it and iOS buzzes. Started in `main.ts` from `settings.hapticsEnabled`; the Settings haptics toggle calls `setTapHaptics` (`drawers.ts`). `keypad.ts` no longer `preventDefault()`s a click whose target is the switch (that would cancel the toggle).
+- **Why:** user asked for the TV remote's working iPhone haptic here too. Script-clicked switches stopped buzzing in iOS 26.5 (WebKit PR 38473: needs real user activation); a real tap still works (confirmed on the user's iPhone with the TV remote).
+- **Files:** `src/audio/haptics.ts`, `src/main.ts`, `src/ui/drawers.ts`, `src/ui/keypad.ts` (uncommitted, NOT deployed)
+- **Undo:** `git checkout -- src/audio/haptics.ts src/main.ts src/ui/drawers.ts src/ui/keypad.ts`
+- **Checked:** `npm run build` and `npm test` pass; browser pane with a faked iPhone: all 186 buttons got a switch, real taps 1 + 2 = gave 3 and toggled each switch. NOT checked: the buzz on the real iPhone (needs commit + `npm run deploy`; service worker may need a reload or two).
+
 ### 2026-11-03 — Raised exponents after x^□
 
 - **Did:** the LCD now draws whatever follows `^` (number, Ans, variable, π, or a bracketed group) as a raised superscript, with a raised empty box right after pressing x^□; replaced the old `^2`/`^3` → ²/³ text swap so all powers look the same.

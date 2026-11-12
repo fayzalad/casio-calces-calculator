@@ -4,12 +4,13 @@ import { DisplayRenderer } from './display/renderer';
 import { setupDrawersAndModals } from './ui/drawers';
 import { GraphPlotter } from './graph/plotter';
 import { sound } from './audio/sound';
-import { Haptics } from './audio/haptics';
+import { Haptics, initTapHaptics } from './audio/haptics';
 import { Evaluator } from './math/evaluator';
 import { setupModePanels } from './ui/modes';
 import { setupSidebar } from './ui/sidebar';
 
 window.addEventListener('DOMContentLoaded', () => {
+  initTapHaptics(store.settings.hapticsEnabled); // iPhone: invisible switches over the buttons
   // 1. Initialize Display Renderer
   const statusEl = document.getElementById('lcd-status');
   const exprEl = document.getElementById('lcd-expression');
