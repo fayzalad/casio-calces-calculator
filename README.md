@@ -2,7 +2,8 @@
 
 ## Resume here  (rewritten each session)
 
-**Last updated 2026-11-03 on DESKTOP. Last checked: 2026-11-03.**
+**Last updated 2026-11-13 on DESKTOP. Last checked: 2026-11-13.**
+**2026-11-13:** iPhone haptics live (`688ba80`, invisible switch over each button in `src/audio/haptics.ts`); `main` not pushed yet.
 
 **State:** committed (`6feceb0`) and live as of 2026-11-03: evaluator fixes (`√2×√8`, odd roots of negatives, COMP gives Math ERROR for imaginary results), DMS input, Pol/Rec two answers, `r∠θ` in CMPLX, CalcES colours matched to the app screenshot, desktop media query, and form screens for STAT / BASE-N / EQN / MATRIX / TABLE / VECTOR / DISTR (`src/ui/modes.ts`; these modes previously did nothing).
 **Next step:** (deploy with `npm run deploy`; Actions is manual-only.) Look at desktop width (1440) and the new panels visually; stacked input for roots/integrals/sums/exponents; mixed numbers.

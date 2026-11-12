@@ -1,5 +1,13 @@
 # Session log
 
+### 2026-11-13 — iPhone haptics committed and deployed
+
+- **Did:** committed the iPhone haptics change as `688ba80` on `main` and ran `npm run deploy`, which updated `gh-pages`.
+- **Why:** user said "Commit and deploy".
+- **Files:** `gh-pages` branch on GitHub (the live site). `main` is 1 commit ahead of `origin/main` and NOT pushed.
+- **Undo:** `git revert 688ba80` then `npm run deploy`.
+- **Checked:** the live site serves the new JS (`index-D1KVA5TX.js`, contains the switch code). NOT checked: the buzz on the iPhone.
+
 ### 2026-11-13 — iPhone haptics (invisible switch over every button)
 
 - **Did:** `src/audio/haptics.ts` gained `initTapHaptics`/`setTapHaptics`/`isHapticSwitch`: on iPhone (no `navigator.vibrate`) an invisible native `<input type=checkbox switch class=hx>` is laid over every `<button>` (MutationObserver re-adds it), so the finger toggles it and iOS buzzes. Started in `main.ts` from `settings.hapticsEnabled`; the Settings haptics toggle calls `setTapHaptics` (`drawers.ts`). `keypad.ts` no longer `preventDefault()`s a click whose target is the switch (that would cancel the toggle).
