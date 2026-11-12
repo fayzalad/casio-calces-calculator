@@ -10,6 +10,9 @@ import { setupModePanels } from './ui/modes';
 import { setupSidebar } from './ui/sidebar';
 
 window.addEventListener('DOMContentLoaded', () => {
+  // Settings > Key Click Sound / Vibration-Haptics (these were saved but never applied before 2026-11-13)
+  sound.enabled = store.settings.soundEnabled;
+  Haptics.enabled = store.settings.hapticsEnabled;
   initTapHaptics(store.settings.hapticsEnabled); // iPhone: invisible switches over the buttons
   // 1. Initialize Display Renderer
   const statusEl = document.getElementById('lcd-status');

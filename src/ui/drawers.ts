@@ -1,5 +1,6 @@
 import { store } from '../state/store';
-import { setTapHaptics } from '../audio/haptics';
+import { setTapHaptics, Haptics } from '../audio/haptics';
+import { sound } from '../audio/sound';
 import { CASIO_CONSTANTS } from '../math/constants';
 import { CASIO_CONVERSIONS } from '../math/conversions';
 import { templatesToText } from '../math/templates';
@@ -335,6 +336,7 @@ function setupSettingsModal(): void {
     soundToggle.checked = store.settings.soundEnabled;
     soundToggle.addEventListener('change', () => {
       store.settings.soundEnabled = soundToggle.checked;
+      sound.enabled = soundToggle.checked;
       store.notify();
     });
   }
@@ -344,6 +346,7 @@ function setupSettingsModal(): void {
     hapticToggle.addEventListener('change', () => {
       store.settings.hapticsEnabled = hapticToggle.checked;
       setTapHaptics(hapticToggle.checked);
+      Haptics.enabled = hapticToggle.checked;
       store.notify();
     });
   }

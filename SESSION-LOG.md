@@ -1,5 +1,13 @@
 # Session log
 
+### 2026-11-13 — Quieter key click; Sound and Haptics settings now actually work
+
+- **Did:** key click gain 0.08 -> 0.02 (`src/audio/sound.ts`). Settings > "Key Click Sound" and "Vibration / Haptics" were saved but never applied: `main.ts` now sets `sound.enabled` / `Haptics.enabled` from settings at start, and `drawers.ts` updates them (and the iPhone switches) when toggled.
+- **Why:** user asked for a quieter substitute sound and a setting to turn sounds/haptics off.
+- **Files:** `src/audio/sound.ts`, `src/main.ts`, `src/ui/drawers.ts` (committed locally; deploy waits for the user's OK)
+- **Undo:** `git revert` the commit, `npm run deploy`.
+- **Checked:** build + `npm test` pass. NOT checked: toggles by hand in the browser, sound level on the phone.
+
 ### 2026-11-13 — Pushed main
 
 - **Did:** `git push origin main` (6147d6a..883f433), on the user's request. **Why:** the haptics commits were local only.
